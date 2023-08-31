@@ -57,21 +57,12 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private quizCategoriesDataService: QuizCategoriesDataService,
-    private createQuizService: CreateQuizService,
-    private aRoute: ActivatedRoute
+    private createQuizService: CreateQuizService
   ) {}
 
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
-    this.aRoute.title.subscribe((x) => {
-      console.log('x', x);
-    });
-
-    console.log('2', this.aRoute.url);
-    console.log('3', this.aRoute.title);
-    console.log('4', this.aRoute.component);
-    console.log('5', this.aRoute.root);
   }
 
   // create quiz
@@ -82,8 +73,8 @@ export class HomePageComponent implements OnInit {
       this.questions = [];
       this.createQuizService
         .createQuiz(
-          this.quizForm.controls.chosenCategory.value,
-          this.quizForm.controls.chosenDifficulty.value
+          this.quizForm.controls['chosenCategory'].value,
+          this.quizForm.controls['chosenDifficulty'].value
         )
         .subscribe((x: QuizQuestionsInterface[]) => {
           this.questions = x;
@@ -91,8 +82,8 @@ export class HomePageComponent implements OnInit {
     } else {
       this.createQuizService
         .createQuiz(
-          this.quizForm.controls.chosenCategory.value,
-          this.quizForm.controls.chosenDifficulty.value
+          this.quizForm.controls['chosenCategory'].value,
+          this.quizForm.controls['chosenDifficulty'].value
         )
         .subscribe((x: QuizQuestionsInterface[]) => {
           this.questions = x;

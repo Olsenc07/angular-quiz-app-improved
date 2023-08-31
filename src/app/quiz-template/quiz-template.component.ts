@@ -1,23 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, type OnChanges, Input } from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
-  FormBuilder,
-  FormGroup,
+  type FormBuilder,
+  type FormGroup,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { type Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
+import { type QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
 
-import { QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
+import { type QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
 import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
-import { CompleteQuestion } from '../interfaces/complete-question-interface';
+import { type CompleteQuestion } from '../interfaces/complete-question-interface';
 
 @Component({
   standalone: true,
@@ -42,7 +42,10 @@ export class QuizTemplateComponent implements OnChanges {
   // only want one but getting 5 of them
   answersForm = this.fb.group({});
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly router: Router
+  ) {}
 
   // Define arrays
   answerList: QuestionsRandomizedInterface[] = [];
@@ -61,11 +64,11 @@ export class QuizTemplateComponent implements OnChanges {
         question: this.question[i].correctAnswer,
         answer: true,
       });
-      for (let c of this.question[i].incorrectAnswers) {
+      for (const c of this.question[i].incorrectAnswers) {
         this.answerList.push({ id: i, question: c, answer: false });
       }
       this.randomizeQuestions(this.question[i].question);
-      let name = i.toString();
+      const name = i.toString();
       this.answersForm.addControl(
         name,
         this.fb.control<string>('', [Validators.required])
@@ -75,15 +78,15 @@ export class QuizTemplateComponent implements OnChanges {
 
   // Randomize questions
   private randomizeQuestions(title: string): void {
-    let randomizedAnswerList: QuestionsRandomizedInterface[] = [];
-    let length: number = this.answerList.length;
+    const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
+    const length: number = this.answerList.length;
     for (let i = 0; i < length; i++) {
-      let randomize = Math.floor(Math.random() * this.answerList.length);
-      let selectedQuestion = this.answerList.splice(randomize, 1);
+      const randomize = Math.floor(Math.random() * this.answerList.length);
+      const selectedQuestion = this.answerList.splice(randomize, 1);
       randomizedAnswerList.push(selectedQuestion[0]);
     }
     this.completeList.push({
-      title: title,
+      title,
       questions: randomizedAnswerList,
     });
   }
@@ -92,6 +95,7 @@ export class QuizTemplateComponent implements OnChanges {
   trackByList(index: number, list: CompleteQuestion): string {
     return list.title + list.questions;
   }
+
   trackByQuestions(
     index: number,
     questions: QuestionsRandomizedInterface
@@ -121,9 +125,9 @@ export class QuizTemplateComponent implements OnChanges {
 
   submitQuiz(Choices: FormGroup, List: CompleteQuestion[]): void {
     const values: QuestionsRandomizedInterface[] = [];
-    //loop and take control values
+    // loop and take control values
     for (let i = 0; i < List.length; i++) {
-      let c = i.toString();
+      const c = i.toString();
       values.push(Choices.get(c)?.value);
     }
 

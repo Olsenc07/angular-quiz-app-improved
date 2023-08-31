@@ -1,8 +1,8 @@
 export interface QuizQuestionsInterface {
-  category: string;
-  correctAnswer: string;
-  difficulty: string;
-  incorrectAnswers: Array<string>;
-  question: string;
-  type: string;
+  category: string
+  correctAnswer: string
+  difficulty: string
+  incorrectAnswers: string[]
+  question: string
+  type: string
 }

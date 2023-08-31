@@ -15,8 +15,12 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule, BrowserAnimationsModule),
   ],
 })
-  .then((started) => console.log('Start up is working', started))
-  .catch((err) => console.error('error has occured on start up', err));
+  .then((started) => {
+    console.log('Start up is working', started);
+  })
+  .catch((err) => {
+    console.error('error has occured on start up', err);
+  });
 // if (environment.production) {
 //   enableProdMode();
 // }

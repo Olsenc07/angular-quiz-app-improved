@@ -1,0 +1,15 @@
+.answer-space{
+    margin: 2%;
+    /* idk why wont work */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: scroll;
+    border: 1px solid #000000;
+  }
+  .card{
+    margin: 2% 0%;
+  }
+  .submit{
+    display: flex;
+    justify-content: center;
+  }

@@ -1,0 +1,56 @@
+.btn-text{
+    color: purple;
+  
+  }
+  #createBtn{
+    display: flex;
+    justify-content: center;
+    margin: 0% 25%;
+  }
+  .divider{
+    padding: 2% 0%;
+  }
+  .questions{
+    margin: 2% 0%;
+  }
+  .quiz-form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  @media only screen and (orientation: landscape){
+  .quiz-form-choices{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .quiz-form-choice{
+    display: flex ;
+    margin: 2%;
+  }
+  
+  }
+  @media only screen and (orientation: portrait) {
+    .quiz-form-choices{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 4%;
+    }
+    .quiz-form-choice{
+      display: flex ;
+      margin-bottom: 2%;
+    }
+    }
+    .title-inside{
+      color: grey;
+      justify-content: start;
+     }
+  .title{
+    display: flex;
+    justify-content: center;
+    background-image: linear-gradient(1deg,whitesmoke,white);
+    color: rgba(34, 34, 61, 0.65);
+    padding-bottom: 2%;
+  }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Answer Page</title>
+</head>
+
+<body>
+  <h2>Results</h2>
+  <div [ngClass]="{'failed': (2 > score),
+    'average': (4 > score && score >= 2),
+'pass': (score > 3)}" >
+    You scored: ({{score}} / {{selections.length}})
+  </div>
+  
+
+  <!-- showing answers -->
+  <ol>
+  <li *ngFor="let list of completeList; index as i"> 
+    <mat-card class="card">
+     
+      <mat-card-header  >
+        
+        {{list.title | decode}}
+      
+      </mat-card-header>
+    
+      <mat-card-content    >
+        <!-- answers in random order -->
+      <!-- keep track of each option chosen -->
+        <mat-chip-listbox  >
+      <mat-chip-option disabled *ngFor="let questions of list.questions;"     >
+        <!-- not working css -->
+    <div [ngClass]="{'failed': (questions.chosen === false), 'pass': (questions.chosen || questions.correct) === true }">
+        {{questions.question | decode}}
+    </div>
+      </mat-chip-option>
+        </mat-chip-listbox>
+    
+      </mat-card-content>
+    </mat-card>
+    </li>
+
+      <button mat-button color="accent" (click)="restart()" >Create a new quiz</button>
+
+  </ol>
+
+
+</body>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable, catchError } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
@@ -9,6 +9,16 @@ import { QuizQuestionsInitialInterface } from '../interfaces/quiz-questions-init
   providedIn: 'root',
 })
 export class CreateQuizService {
+  head = new HttpHeaders()
+    .set('Access-Control-Allow-Origin', '*')
+    .set(
+      'Access-Control-Allow-Headers',
+      "Origin, X-Requested-With, Content-Type: 'multipart/form-data', Accept, Authorization"
+    )
+    .set(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, PUT, OPTIONS'
+    );
   // Direct Injection
   constructor(private http: HttpClient) {}
 
@@ -27,6 +37,7 @@ export class CreateQuizService {
 
     return this.http
       .get<QuizQuestionsInitialInterface>('https://opentdb.com/api.php', {
+        headers: this.head,
         params: queryParams,
       })
       .pipe(

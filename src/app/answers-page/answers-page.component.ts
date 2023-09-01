@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { Component, type OnInit } from '@angular/core';
-import { type ActivatedRoute, type Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { type CompleteQuestion } from '../interfaces/complete-question-interface';
+import { CompleteQuestion } from '../interfaces/complete-question-interface';
 import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
-import { type QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
+import { QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
 @Component({
   standalone: true,
   selector: 'app-answers-page',
@@ -25,10 +25,7 @@ export class AnswersPageComponent implements OnInit {
   selections: QuestionsRandomizedInterface[] = [];
   score: number = 0;
 
-  constructor(
-    private readonly actRoute: ActivatedRoute,
-    private readonly router: Router
-  ) {}
+  constructor(private actRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.actRoute.queryParamMap.subscribe((params) => {

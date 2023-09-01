@@ -2,7 +2,6 @@ import { type Routes } from '@angular/router';
 // lazy loading of standalone components
 // hence loadComponent
 
-// ask about any params
 export const routes: Routes = [
   {
     path: 'answers/:categories:questions',

@@ -11,13 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { type QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
+import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
 
-import { type QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
+import { QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
 import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
-import { type CompleteQuestion } from '../interfaces/complete-question-interface';
+import { CompleteQuestion } from '../interfaces/complete-question-interface';
 
 @Component({
   standalone: true,
@@ -116,11 +116,6 @@ export class QuizTemplateComponent implements OnChanges {
       // chosen answer
       this.answersForm.get(appropriateForm)?.setValue(answer);
     }
-    // UX testing
-    // if(this.answersForm.valid){
-    //   const submitBtn = document.getElementById("submit");
-    //   submitBtn?.scrollIntoView();
-    //   }
   }
 
   submitQuiz(Choices: FormGroup, List: CompleteQuestion[]): void {

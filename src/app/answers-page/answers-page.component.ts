@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, type OnInit } from '@angular/core';
+import { type ActivatedRoute, type Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CompleteQuestion } from '../interfaces/complete-question-interface';
+import { type CompleteQuestion } from '../interfaces/complete-question-interface';
 import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
-import { QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
+import { type QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
 @Component({
   standalone: true,
   selector: 'app-answers-page',
@@ -25,7 +25,10 @@ export class AnswersPageComponent implements OnInit {
   selections: QuestionsRandomizedInterface[] = [];
   score: number = 0;
 
-  constructor(private actRoute: ActivatedRoute, private router: Router) {}
+  constructor(
+    private readonly actRoute: ActivatedRoute,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.actRoute.queryParamMap.subscribe((params) => {
@@ -37,14 +40,14 @@ export class AnswersPageComponent implements OnInit {
       this.completeList.forEach((x: CompleteQuestion): void => {
         x.questions.forEach((g: QuestionsRandomizedInterface): void => {
           this.selections.forEach((t: QuestionsRandomizedInterface): void => {
-            if (t.question === g.question && t.answer === true) {
+            if (t.question === g.question && t.answer) {
               this.score++;
               g.chosen = true;
             }
-            if (t.question === g.question && t.answer === false) {
+            if (t.question === g.question && !t.answer) {
               g.chosen = false;
             }
-            if (g.answer === true) {
+            if (g.answer) {
               g.correct = true;
             }
           });

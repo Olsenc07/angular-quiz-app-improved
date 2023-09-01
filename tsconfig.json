@@ -28,5 +28,9 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": [
+    "src/**/*.ts", // Adjust this path to match your TypeScript files
+    ".eslintrc.js"  // Add this to include the ESLint configuration file
+  ]
 }

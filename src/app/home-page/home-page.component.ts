@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, type OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -19,8 +19,6 @@ import { MatCardModule } from '@angular/material/card';
 import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
 import { QuizTemplateComponent } from '../quiz-template/quiz-template.component';
 import { MatDividerModule } from '@angular/material/divider';
-
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -46,6 +44,7 @@ export class HomePageComponent implements OnInit {
   categories$: Observable<CategoryDataInterface[]> = new Observable<
     CategoryDataInterface[]
   >();
+
   difficulties: string[] = ['easy', 'medium', 'hard'];
 
   quizMade: boolean = false;
@@ -56,8 +55,8 @@ export class HomePageComponent implements OnInit {
   });
 
   constructor(
-    private quizCategoriesDataService: QuizCategoriesDataService,
-    private createQuizService: CreateQuizService
+    private readonly quizCategoriesDataService: QuizCategoriesDataService,
+    private readonly createQuizService: CreateQuizService
   ) {}
 
   ngOnInit(): void {

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, type OnChanges, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
-  type FormBuilder,
-  type FormGroup,
+  FormBuilder,
+  FormGroup,
 } from '@angular/forms';
-import { type Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';

@@ -1,5 +1,8 @@
-.failed{
+  .failed{
     color:red;
+  }
+  .failed-btn{
+    background-color:red;
   }
   .average{
     color: #b6b607;
@@ -9,4 +12,7 @@
   }
   .pass{
     color:green;
+  }
+  .pass-btn{
+    background-color:green;
   }

@@ -1,6 +1,5 @@
 .btn-text{
     color: purple;
-  
   }
   #createBtn{
     display: flex;
@@ -28,7 +27,6 @@
     display: flex ;
     margin: 2%;
   }
-  
   }
   @media only screen and (orientation: portrait) {
     .quiz-form-choices{

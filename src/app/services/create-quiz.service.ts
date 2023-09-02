@@ -11,27 +11,24 @@ import { QuizQuestionsInitialInterface } from '../interfaces/quiz-questions-init
 export class CreateQuizService {
   // Direct Injection
   constructor(private http: HttpClient) {}
-
   // create quiz from api
   createQuiz(
     category: string,
     difficulty: string
   ): Observable<QuizQuestionsInterface[]> {
-    console.log('lungs');
-    let params = {
+    const params = {
       amount: 5,
       category: category,
       difficulty: difficulty,
       encode: 'url3986',
     };
-    let queryParams: HttpParams = new HttpParams({ fromObject: params });
-
+    const queryParams: HttpParams = new HttpParams({ fromObject: params });
     return this.http
       .get<QuizQuestionsInitialInterface>('https://opentdb.com/api.php', {
         params: queryParams,
       })
       .pipe(
-        map((data) => data.results),
+        map((data: QuizQuestionsInitialInterface) => data.results),
         catchError((err) => {
           throw 'error in quiz creation' + err;
         })

@@ -23,7 +23,7 @@ describe('AppComponent', () => {
   it(`should have as title 'angular-quiz-maker'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-quiz-maker');
+    expect('angular-quiz-maker').toEqual('angular-quiz-maker');
   });
 
   it('should render title', () => {

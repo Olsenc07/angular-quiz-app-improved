@@ -52,23 +52,23 @@ export class QuizTemplateComponent implements OnChanges {
   completeList: CompleteQuestion[] = [];
   // Recieve data from parent
   @Input({ required: true })
-  question!: QuizQuestionsInterface[];
+  question!: QuizQuestionsInterface[] | null;
 
   ngOnChanges(): void {
     // create new array after making objects of answers
     // to indicate correct or incorrect answers
     // assign which question these answers were in
-    for (let i = 0; i < this.question.length; i++) {
+    for (let i = 0; i < this.question!.length; i++) {
       this.answerList.push({
         id: i,
-        question: this.question[i].correct_answer,
+        question: this.question![i].correct_answer,
         answer: true,
       });
-      for (const c of this.question[i].incorrect_answers) {
+      for (const c of this.question![i].incorrect_answers) {
         this.answerList.push({ id: i, question: c, answer: false });
       }
-      this.randomizeQuestions(this.question[i].question);
-      const name = i.toString();
+      this.randomizeQuestions(this.question![i].question);
+      const name: string = i.toString();
       this.answersForm.addControl(
         name,
         this.fb.control<string>('', [Validators.required])
@@ -81,8 +81,8 @@ export class QuizTemplateComponent implements OnChanges {
     const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
     const length: number = this.answerList.length;
     for (let i = 0; i < length; i++) {
-      const randomize = Math.floor(Math.random() * this.answerList.length);
-      const selectedQuestion = this.answerList.splice(randomize, 1);
+      const randomize: number = Math.floor(Math.random() * this.answerList.length);
+      const selectedQuestion: QuestionsRandomizedInterface[] = this.answerList.splice(randomize, 1);
       randomizedAnswerList.push(selectedQuestion[0]);
     }
     this.completeList.push({
@@ -105,7 +105,6 @@ export class QuizTemplateComponent implements OnChanges {
 
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
-
     // unclick answer
     if (answer == this.answersForm.get(appropriateForm)?.value.id) {
       // reset
@@ -122,7 +121,7 @@ export class QuizTemplateComponent implements OnChanges {
     const values: QuestionsRandomizedInterface[] = [];
     // loop and take control values
     for (let i = 0; i < List.length; i++) {
-      const c = i.toString();
+      const c: string = i.toString();
       values.push(Choices.get(c)?.value);
     }
 

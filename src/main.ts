@@ -1,6 +1,6 @@
 import 'zone.js/dist/zone';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { importProvidersFrom } from '@angular/core';
+import { type ApplicationRef, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app-routing/app-routing.module';
 import { AppComponent } from './app/app.component';
@@ -15,15 +15,10 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule, BrowserAnimationsModule),
   ],
 })
-  .then((started) => {
+  .then((started: ApplicationRef) => {
     console.log('Start up is working', started);
   })
-  .catch((err) => {
+  .catch((err: any) => {
     console.error('error has occured on start up', err);
   });
-// if (environment.production) {
-//   enableProdMode();
-// }
 
-// platformBrowserDynamic().bootstrapModule(AppModule)
-//   .catch(err => console.error(err));

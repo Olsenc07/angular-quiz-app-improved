@@ -7,16 +7,15 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../services/quiz-categories-data.service';
-import { CategoryDataInterface } from '../interfaces/category-interface';
+import { type CategoryDataInterface } from '../interfaces/category-interface';
 import { Observable } from 'rxjs';
-
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateQuizService } from '../services/create-quiz.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
+import { type QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
 import { QuizTemplateComponent } from '../quiz-template/quiz-template.component';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -39,14 +38,15 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class HomePageComponent implements OnInit {
   // quiz questions
-  questions: QuizQuestionsInterface[] = [];
+  questions$: Observable<QuizQuestionsInterface[]> = new Observable<
+    QuizQuestionsInterface[]
+  >();
   // quiz maker options
   categories$: Observable<CategoryDataInterface[]> = new Observable<
     CategoryDataInterface[]
   >();
 
   difficulties: string[] = ['easy', 'medium', 'hard'];
-
   quizMade: boolean = false;
 
   quizForm: FormGroup = new FormGroup({
@@ -66,32 +66,17 @@ export class HomePageComponent implements OnInit {
 
   // create quiz
   createQuiz(): void {
-    if (this.questions.length > 0) {
-      // reset array
-      // may need to unsubscribe
-      this.questions = [];
-      this.createQuizService
-        .createQuiz(
-          this.quizForm.controls['chosenCategory'].value,
-          this.quizForm.controls['chosenDifficulty'].value
-        )
-        .subscribe((x: QuizQuestionsInterface[]) => {
-          this.questions = x;
-        });
-    } else {
-      this.createQuizService
-        .createQuiz(
-          this.quizForm.controls['chosenCategory'].value,
-          this.quizForm.controls['chosenDifficulty'].value
-        )
-        .subscribe((x: QuizQuestionsInterface[]) => {
-          this.questions = x;
-        });
-    }
+    this.questions$ = this.createQuizService.createQuiz(
+      this.quizForm.controls['chosenCategory'].value,
+      this.quizForm.controls['chosenDifficulty'].value
+    );
   }
 
   // efficent rendering
-  trackByCats(index: number, category: CategoryDataInterface): string {
+  trackByCats(i: number, category: CategoryDataInterface): string {
     return category.name;
+  }
+  trackByDifficulty(i: number, difficulty: string): string {
+    return difficulty;
   }
 }

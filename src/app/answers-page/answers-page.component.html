@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Answer Page</title>
@@ -11,38 +12,30 @@
 'pass': (score > 3)}" >
     You scored: ({{score}} / {{selections.length}})
   </div>
-  
-
   <!-- showing answers -->
   <ol>
-  <li *ngFor="let list of completeList; index as i"> 
+  <li *ngFor="let list of completeList; trackBy: trackByCompleteList;"> 
     <mat-card class="card">
-     
       <mat-card-header  >
-        
         {{list.title | decode}}
-      
       </mat-card-header>
-    
       <mat-card-content    >
         <!-- answers in random order -->
       <!-- keep track of each option chosen -->
         <mat-chip-listbox  >
-      <mat-chip-option disabled *ngFor="let questions of list.questions;"     >
-        <!-- not working css -->
-    <div [ngClass]="{'failed': (questions.chosen === false), 'pass': (questions.chosen || questions.correct) === true }">
+      <mat-chip-option disabled *ngFor="let questions of list.questions; trackBy: trackByList;"
+      [ngClass]="{'failed-btn': (questions.chosen === false), 'pass-btn': (questions.chosen || questions.correct) === true }">
+    <div >
         {{questions.question | decode}}
     </div>
       </mat-chip-option>
         </mat-chip-listbox>
-    
       </mat-card-content>
     </mat-card>
     </li>
 
-      <button mat-button color="accent" (click)="restart()" >Create a new quiz</button>
+      <button mat-button color="accent" (click)="restart()">Create a new quiz</button>
 
   </ol>
-
-
 </body>
+</html>

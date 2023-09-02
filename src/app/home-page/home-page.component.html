@@ -33,7 +33,7 @@ Quiz Maker
 <mat-form-field id="difficultySelect" appearance="outline">
   <mat-label>Select a difficulty</mat-label>
 <mat-select formControlName="chosenDifficulty" >
-  <mat-option *ngFor="let difficulty of difficulties; " [value]="difficulty">
+  <mat-option *ngFor="let difficulty of difficulties;" [value]="difficulty">
     {{difficulty | titlecase}}
   </mat-option>
 </mat-select>
@@ -44,7 +44,7 @@ Quiz Maker
 
 <!-- create quiz button -->
 <button mat-raised-button color="warn" type="submit" id="createBtn" [disabled]="quizForm.invalid" >
-  <div *ngIf="!(questions.length); else more">
+  <div *ngIf="!(questions$ | async); else more">
   <label *ngIf="quizForm.invalid; else ready" >
     Select Options
   </label>
@@ -61,17 +61,11 @@ Quiz Maker
 </mat-card>
 
 <!-- Display 5 question quiz based on inputs -->
-<ng-container  *ngIf="questions.length > 0">
-  <!-- renders -->
-
+<ng-container  *ngIf="questions$ | async">
   <h2>Good Luck!</h2>
   <div class="questions">
-    <!-- [question]="(questions$ | async)" -->
-<app-quiz-template [question]="questions" ></app-quiz-template>
+<app-quiz-template [question]="(questions$ | async)" ></app-quiz-template>
   </div>
-<!-- </ng-content> -->
-
-
 </ng-container>
 </body>
 </html>

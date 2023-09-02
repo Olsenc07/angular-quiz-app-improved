@@ -61,10 +61,10 @@ export class QuizTemplateComponent implements OnChanges {
     for (let i = 0; i < this.question.length; i++) {
       this.answerList.push({
         id: i,
-        question: this.question[i].correctAnswer,
+        question: this.question[i].correct_answer,
         answer: true,
       });
-      for (const c of this.question[i].incorrectAnswers) {
+      for (const c of this.question[i].incorrect_answers) {
         this.answerList.push({ id: i, question: c, answer: false });
       }
       this.randomizeQuestions(this.question[i].question);

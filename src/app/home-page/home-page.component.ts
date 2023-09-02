@@ -62,9 +62,6 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
-    this.categories$.subscribe((x) => {
-      console.log('advantage', x);
-    });
   }
 
   // create quiz

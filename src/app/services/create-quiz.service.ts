@@ -17,6 +17,7 @@ export class CreateQuizService {
     category: string,
     difficulty: string
   ): Observable<QuizQuestionsInterface[]> {
+    console.log('lungs');
     let params = {
       amount: 5,
       category: category,

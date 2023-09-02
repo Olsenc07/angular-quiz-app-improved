@@ -15,7 +15,7 @@ export class QuizCategoriesDataService {
     return this.http
       .get<NestedCategoryInterface>('https://opentdb.com/api_category.php')
       .pipe(
-        map((data) => data.triviaCategories),
+        map((data: NestedCategoryInterface) => data.trivia_categories),
         catchError((err) => {
           throw 'error in request' + err;
         })

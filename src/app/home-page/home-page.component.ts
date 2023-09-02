@@ -55,13 +55,16 @@ export class HomePageComponent implements OnInit {
   });
 
   constructor(
-    private readonly quizCategoriesDataService: QuizCategoriesDataService,
-    private readonly createQuizService: CreateQuizService
+    private quizCategoriesDataService: QuizCategoriesDataService,
+    private createQuizService: CreateQuizService
   ) {}
 
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
+    this.categories$.subscribe((x) => {
+      console.log('advantage', x);
+    });
   }
 
   // create quiz

@@ -72,8 +72,7 @@
               "browserTarget": "angular-quiz-maker:build:production"
             },
             "development": {
-              "browserTarget": "angular-quiz-maker:build:development",
-              "proxyConfig": "src/proxy.conf.json"
+              "browserTarget": "angular-quiz-maker:build:development"
             }
           },
           "defaultConfiguration": "development"

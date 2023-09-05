@@ -20,7 +20,7 @@
       <!-- answers in random order -->
     <!-- keep track of each option chosen -->
       <mat-chip-listbox  >
-    <mat-chip-option *ngFor="let questions of list.questions; index as i; trackBy: trackByQuestions; "   class="answer-space" color="primary" (click)="answered(questions)" >
+    <mat-chip-option *ngFor="let questions of list.questions; index as i; trackBy: trackByQuestions;" class="answer-space" color="primary" (click)="answered(questions)" >
   
       {{questions.question | decode}}
   

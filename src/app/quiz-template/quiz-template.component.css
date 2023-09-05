@@ -1,6 +1,5 @@
 .answer-space{
     margin: 2%;
-    /* idk why wont work */
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: scroll;

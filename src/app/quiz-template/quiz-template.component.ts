@@ -12,7 +12,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { QuizQuestionsInterface } from '../interfaces/quiz-questions-interface';
-
 import { QuestionsRandomizedInterface } from '../interfaces/questions-randomized-interface';
 import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
 import { MatChipsModule } from '@angular/material/chips';
@@ -39,7 +38,7 @@ import { CompleteQuestion } from '../interfaces/complete-question-interface';
 export class QuizTemplateComponent implements OnChanges {
   valid: boolean = false;
 
-  // only want one but getting 5 of them
+  // create forms
   answersForm = this.fb.group({});
 
   constructor(
@@ -52,27 +51,29 @@ export class QuizTemplateComponent implements OnChanges {
   completeList: CompleteQuestion[] = [];
   // Recieve data from parent
   @Input({ required: true })
-  question!: QuizQuestionsInterface[] | null;
+  question: QuizQuestionsInterface[] | null | undefined;
 
   ngOnChanges(): void {
     // create new array after making objects of answers
     // to indicate correct or incorrect answers
     // assign which question these answers were in
-    for (let i = 0; i < this.question!.length; i++) {
-      this.answerList.push({
-        id: i,
-        question: this.question![i].correct_answer,
-        answer: true,
-      });
-      for (const c of this.question![i].incorrect_answers) {
-        this.answerList.push({ id: i, question: c, answer: false });
+    if (this.question?.length) {
+      for (let i = 0; i < this.question.length; i++) {
+        this.answerList.push({
+          id: i,
+          question: this.question![i].correct_answer,
+          answer: true,
+        });
+        for (const c of this.question![i].incorrect_answers) {
+          this.answerList.push({ id: i, question: c, answer: false });
+        }
+        this.randomizeQuestions(this.question![i].question);
+        const name: string = i.toString();
+        this.answersForm.addControl(
+          name,
+          this.fb.control<string>('', [Validators.required])
+        );
       }
-      this.randomizeQuestions(this.question![i].question);
-      const name: string = i.toString();
-      this.answersForm.addControl(
-        name,
-        this.fb.control<string>('', [Validators.required])
-      );
     }
   }
 
@@ -81,8 +82,11 @@ export class QuizTemplateComponent implements OnChanges {
     const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
     const length: number = this.answerList.length;
     for (let i = 0; i < length; i++) {
-      const randomize: number = Math.floor(Math.random() * this.answerList.length);
-      const selectedQuestion: QuestionsRandomizedInterface[] = this.answerList.splice(randomize, 1);
+      const randomize: number = Math.floor(
+        Math.random() * this.answerList.length
+      );
+      const selectedQuestion: QuestionsRandomizedInterface[] =
+        this.answerList.splice(randomize, 1);
       randomizedAnswerList.push(selectedQuestion[0]);
     }
     this.completeList.push({
@@ -105,12 +109,17 @@ export class QuizTemplateComponent implements OnChanges {
 
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
+    console.log('last', this.answersForm);
+    console.log('first', this.answersForm.get(appropriateForm));
+
     // unclick answer
-    if (answer == this.answersForm.get(appropriateForm)?.value.id) {
+    if (answer.id == this.answersForm.get(appropriateForm)?.value.id) {
+      console.log('yo', this.answersForm);
+      console.log('back', this.answersForm.get(appropriateForm));
       // reset
-      this.answersForm.get(appropriateForm)?.reset();
-      // assign
-      this.answersForm.get(appropriateForm)?.setValue(answer);
+      this.answersForm.get(appropriateForm)?.reset('');
+      // test this to dissapear submit if unselected option
+      console.log('back 2', this.answersForm.get(appropriateForm));
     } else {
       // chosen answer
       this.answersForm.get(appropriateForm)?.setValue(answer);

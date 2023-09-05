@@ -110,7 +110,10 @@ export class QuizTemplateComponent implements OnChanges {
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
     // unclick answer
-    if (answer.id == this.answersForm.get(appropriateForm)?.value.id) {
+    if (
+      answer.id == this.answersForm.get(appropriateForm)?.value.id &&
+      this.answersForm.get(appropriateForm)?.value.question == answer.question
+    ) {
       // reset
       this.answersForm.get(appropriateForm)?.reset('');
     } else {

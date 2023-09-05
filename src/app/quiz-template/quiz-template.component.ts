@@ -109,17 +109,10 @@ export class QuizTemplateComponent implements OnChanges {
 
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
-    console.log('last', this.answersForm);
-    console.log('first', this.answersForm.get(appropriateForm));
-
     // unclick answer
     if (answer.id == this.answersForm.get(appropriateForm)?.value.id) {
-      console.log('yo', this.answersForm);
-      console.log('back', this.answersForm.get(appropriateForm));
       // reset
       this.answersForm.get(appropriateForm)?.reset('');
-      // test this to dissapear submit if unselected option
-      console.log('back 2', this.answersForm.get(appropriateForm));
     } else {
       // chosen answer
       this.answersForm.get(appropriateForm)?.setValue(answer);

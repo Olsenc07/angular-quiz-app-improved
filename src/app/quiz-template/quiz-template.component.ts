@@ -126,7 +126,7 @@ export class QuizTemplateComponent implements OnChanges {
       const c: string = i.toString();
       values.push(Choices.get(c)?.value);
     }
-
+    // navigate to answer page
     this.router.navigate(['/answers/:'], {
       // passing objects as strings through url
       queryParams: {

@@ -50,8 +50,8 @@ export class HomePageComponent implements OnInit {
   quizMade: boolean = false;
 
   quizForm: FormGroup = new FormGroup({
-    chosenCategory: new FormControl<string | null>('', Validators.required),
-    chosenDifficulty: new FormControl<string | null>('', Validators.required),
+    chosenCategory: new FormControl<string | null>('', [Validators.required]),
+    chosenDifficulty: new FormControl<string | null>('', [Validators.required]),
   });
 
   constructor(

@@ -2,8 +2,8 @@ import 'zone.js/dist/zone';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { type ApplicationRef, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { routes } from './app/app-routing/app-routing.module';
-import { AppComponent } from './app/app.component';
+import { routes } from './src/app/app-routing/app-routing.module';
+import { AppComponent } from './src/app/app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -21,4 +21,3 @@ bootstrapApplication(AppComponent, {
   .catch((err: any) => {
     console.error('error has occured on start up', err);
   });
-

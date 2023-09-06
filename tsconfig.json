@@ -30,6 +30,6 @@
     "strictTemplates": true
   },
   "include": [
-    "src/**/*.ts", // Adjust this path to match your TypeScript files
+    "src/**/*.ts", "main.ts", // Adjust this path to match your TypeScript files
   ]
 }

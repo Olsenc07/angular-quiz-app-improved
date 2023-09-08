@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
@@ -49,10 +49,10 @@ export class QuizTemplateComponent implements OnChanges {
   // Define arrays
   answerList: QuestionsRandomizedInterface[] = [];
   completeList: CompleteQuestion[] = [];
+
   // Recieve data from parent
   @Input({ required: true })
   question: QuizQuestionsInterface[] | null | undefined;
-
   ngOnChanges(): void {
     // create new array after making objects of answers
     // to indicate correct or incorrect answers
@@ -65,7 +65,11 @@ export class QuizTemplateComponent implements OnChanges {
           answer: true,
         });
         for (const c of this.question![i].incorrect_answers) {
-          this.answerList.push({ id: i, question: c, answer: false });
+          this.answerList.push({
+            id: i,
+            question: c,
+            answer: false,
+          });
         }
         this.randomizeQuestions(this.question![i].question);
         const name: string = i.toString();
@@ -96,15 +100,16 @@ export class QuizTemplateComponent implements OnChanges {
   }
 
   // efficient array rending
-  trackByList(index: number, list: CompleteQuestion): string {
-    return list.title + list.questions;
+  trackByList(index: number, list: CompleteQuestion): CompleteQuestion {
+    console.log('watch', list);
+    return list;
   }
 
   trackByQuestions(
     index: number,
     questions: QuestionsRandomizedInterface
-  ): string {
-    return questions.question;
+  ): QuestionsRandomizedInterface {
+    return questions;
   }
 
   answered(answer: QuestionsRandomizedInterface): void {
@@ -118,7 +123,12 @@ export class QuizTemplateComponent implements OnChanges {
       this.answersForm.get(appropriateForm)?.reset('');
     } else {
       // chosen answer
-      this.answersForm.get(appropriateForm)?.setValue(answer);
+      this.answersForm.get(appropriateForm)?.setValue({
+        id: answer.id,
+        question: answer.question,
+        answer: answer.answer,
+      });
+      console.log('boo', this.answersForm.get(appropriateForm)?.value);
     }
   }
 
@@ -127,6 +137,13 @@ export class QuizTemplateComponent implements OnChanges {
     // loop and take control values
     for (let i = 0; i < List.length; i++) {
       const c: string = i.toString();
+      // chosen
+      Choices.get(c)?.setValue({
+        id: Choices.get(c)?.value.id,
+        question: Choices.get(c)?.value.question,
+        answer: Choices.get(c)?.value.answer,
+        chosen: true,
+      });
       values.push(Choices.get(c)?.value);
     }
     // navigate to answer page
@@ -137,5 +154,6 @@ export class QuizTemplateComponent implements OnChanges {
         questions: JSON.stringify(List),
       },
     });
+    console.log('view', values);
   }
 }

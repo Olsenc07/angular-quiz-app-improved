@@ -19,16 +19,16 @@
       <mat-card-header  >
         {{list.title | decode}}
       </mat-card-header>
-      <mat-card-content    >
-        <!-- answers in random order -->
-      <!-- keep track of each option chosen -->
-        <mat-chip-listbox  >
-      <mat-chip-option disabled *ngFor="let questions of list.questions; trackBy: trackByList;"
-      [ngClass]="{'failed-btn': (questions.chosen === false), 'pass-btn': (questions.chosen || questions.correct) === true }">
-    <div >
-        {{questions.question | decode}}
-    </div>
+      <mat-card-content>
+        <mat-chip-listbox >
+
+      <mat-chip-option disabled  *ngFor="let question of list.questions; trackBy: trackByList;"
+>
+    <div [ngClass]="{'failed': ((question?.chosen === true) && (question.answer === false)), 'pass': question.answer === true }">
+        {{question.question | decode}}
+</div>
       </mat-chip-option>
+
         </mat-chip-listbox>
       </mat-card-content>
     </mat-card>

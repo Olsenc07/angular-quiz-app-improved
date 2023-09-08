@@ -4,8 +4,16 @@
   <meta charset="utf-8">
   <title>Quiz Template</title>
 </head>
-<body>
+<body >
 <form [formGroup]="answersForm"  (ngSubmit)="submitQuiz(answersForm, completeList)" >
+  <!-- submit -->
+  <ng-container *ngIf="answersForm.valid">
+    <div class="submit">
+      <button mat-raised-button color="primary" id="submit" type="submit" >
+        Submit
+      </button>
+    </div>
+  </ng-container>
     <ol>
         <li *ngFor="let list of completeList; index as i; trackBy: trackByList;"> 
   <mat-card class="card">
@@ -18,12 +26,10 @@
   
     <mat-card-content    >
       <!-- answers in random order -->
-    <!-- keep track of each option chosen -->
-      <mat-chip-listbox  >
-    <mat-chip-option *ngFor="let questions of list.questions; index as i; trackBy: trackByQuestions;" class="answer-space" color="primary" (click)="answered(questions)" >
-  
+      <mat-chip-listbox >
+    <mat-chip-option *ngFor="let questions of list.questions; index as i; trackBy: trackByQuestions;" class="answer-space" color="primary"
+    (click)="answered(questions)" >  
       {{questions.question | decode}}
-  
     </mat-chip-option>
       </mat-chip-listbox>
   
@@ -31,12 +37,6 @@
   </mat-card>
   </li> 
   </ol>
-  <!-- submit -->
-  <div *ngIf="answersForm.valid" class="submit" >
-    <button mat-raised-button color="primary" id="submit" type="submit" >
-      Submit
-    </button>
-  </div>
   </form>
   </body>
   </html>

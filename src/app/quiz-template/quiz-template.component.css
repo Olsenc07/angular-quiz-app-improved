@@ -1,8 +1,4 @@
 .answer-space{
-    margin: 2%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-x: scroll;
     border: 1px solid #000000;
   }
   .card{

@@ -39,27 +39,19 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
               (
                 questionsRandomInterface: QuestionsRandomizedInterface
               ): void => {
+                // fix this i think
                 this.selections.forEach(
                   (
                     questionsRandomizedInterface: QuestionsRandomizedInterface
                   ): void => {
                     if (
-                      questionsRandomizedInterface.question ===
-                        questionsRandomInterface.question &&
-                      questionsRandomizedInterface.answer
+                      // fix this part
+                      (questionsRandomizedInterface?.chosen &&
+                        questionsRandomizedInterface.answer) === true
                     ) {
                       this.score++;
+                      // fix this but need to assign
                       questionsRandomInterface.chosen = true;
-                    }
-                    if (
-                      questionsRandomizedInterface.question ===
-                        questionsRandomInterface.question &&
-                      !questionsRandomizedInterface.answer
-                    ) {
-                      questionsRandomInterface.chosen = false;
-                    }
-                    if (questionsRandomInterface.answer) {
-                      questionsRandomInterface.correct = true;
                     }
                   }
                 );
@@ -67,6 +59,7 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
             );
           }
         );
+        console.log('darn', this.selections);
       }
     );
   }
@@ -84,6 +77,7 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
     i: number,
     questions: QuestionsRandomizedInterface
   ): QuestionsRandomizedInterface {
+    console.log('time', questions);
     return questions;
   }
 

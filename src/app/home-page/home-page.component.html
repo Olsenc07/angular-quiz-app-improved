@@ -62,7 +62,7 @@ Quiz Maker
 
 <!-- Display 5 question quiz based on inputs -->
 <ng-container  *ngIf="questions$ | async">
-  <h2>Good Luck!</h2>
+  <h2>Good Luck!</h2> 
   <div class="questions">
 <app-quiz-template [question]="(questions$ | async)" ></app-quiz-template>
   </div>

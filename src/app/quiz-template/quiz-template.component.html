@@ -18,17 +18,17 @@
         <li *ngFor="let list of completeList; index as i; trackBy: trackByList;"> 
   <mat-card class="card">
    
-    <mat-card-header  >
+    <mat-card-header>
       
       {{list.title | decode}}
     
     </mat-card-header>
   
-    <mat-card-content    >
+    <mat-card-content>
       <!-- answers in random order -->
       <mat-chip-listbox >
     <mat-chip-option *ngFor="let questions of list.questions; index as i; trackBy: trackByQuestions;" class="answer-space" color="primary"
-    (click)="answered(questions)" >  
+    (click)="answered(questions)">  
       {{questions.question | decode}}
     </mat-chip-option>
       </mat-chip-listbox>

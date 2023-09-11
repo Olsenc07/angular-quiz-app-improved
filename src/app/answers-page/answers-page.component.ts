@@ -23,7 +23,6 @@ import { Subscription } from 'rxjs';
 })
 export class AnswersPageComponent implements OnInit, OnDestroy {
   completeList: CompleteQuestion[] = [];
-  selections: QuestionsRandomizedInterface[] = [];
   score: number = 0;
   routeSub$: Subscription | undefined;
   constructor(private actRoute: ActivatedRoute, private router: Router) {}
@@ -31,7 +30,6 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeSub$ = this.actRoute.queryParamMap.subscribe(
       (params: ParamMap) => {
-        this.selections = JSON.parse(params.get('categories')!);
         this.completeList = JSON.parse(params.get('questions')!);
         this.completeList.forEach(
           (completeQuestion: CompleteQuestion): void => {
@@ -39,27 +37,17 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
               (
                 questionsRandomInterface: QuestionsRandomizedInterface
               ): void => {
-                // fix this i think
-                this.selections.forEach(
-                  (
-                    questionsRandomizedInterface: QuestionsRandomizedInterface
-                  ): void => {
-                    if (
-                      // fix this part
-                      (questionsRandomizedInterface?.chosen &&
-                        questionsRandomizedInterface.answer) === true
-                    ) {
-                      this.score++;
-                      // fix this but need to assign
-                      questionsRandomInterface.chosen = true;
-                    }
-                  }
-                );
+                // count the score
+                if (
+                  questionsRandomInterface.chosen &&
+                  questionsRandomInterface.answer
+                ) {
+                  this.score++;
+                }
               }
             );
           }
         );
-        console.log('darn', this.selections);
       }
     );
   }
@@ -77,7 +65,6 @@ export class AnswersPageComponent implements OnInit, OnDestroy {
     i: number,
     questions: QuestionsRandomizedInterface
   ): QuestionsRandomizedInterface {
-    console.log('time', questions);
     return questions;
   }
 

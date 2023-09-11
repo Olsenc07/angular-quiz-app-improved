@@ -10,7 +10,7 @@
   <div [ngClass]="{'failed': (2 > score),
     'average': (4 > score && score >= 2),
 'pass': (score > 3)}" >
-    You scored: ({{score}} / {{selections.length}})
+    You scored: ({{score}} / {{completeList.length}})
   </div>
   <!-- showing answers -->
   <ol>
@@ -21,14 +21,11 @@
       </mat-card-header>
       <mat-card-content>
         <mat-chip-listbox >
-
-      <mat-chip-option disabled  *ngFor="let question of list.questions; trackBy: trackByList;"
->
-    <div [ngClass]="{'failed': ((question?.chosen === true) && (question.answer === false)), 'pass': question.answer === true }">
+      <mat-basic-chip *ngFor="let question of list.questions; trackBy: trackByList;"
+      class="btn"
+      [ngClass]="{'failed-btn': ((question.chosen === true) && (question.answer === false)), 'pass-btn': question.answer === true }">
         {{question.question | decode}}
-</div>
-      </mat-chip-option>
-
+      </mat-basic-chip>
         </mat-chip-listbox>
       </mat-card-content>
     </mat-card>

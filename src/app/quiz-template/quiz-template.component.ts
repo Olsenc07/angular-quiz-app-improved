@@ -101,7 +101,6 @@ export class QuizTemplateComponent implements OnChanges {
 
   // efficient array rending
   trackByList(index: number, list: CompleteQuestion): CompleteQuestion {
-    console.log('watch', list);
     return list;
   }
 
@@ -128,7 +127,6 @@ export class QuizTemplateComponent implements OnChanges {
         question: answer.question,
         answer: answer.answer,
       });
-      console.log('boo', this.answersForm.get(appropriateForm)?.value);
     }
   }
 
@@ -137,23 +135,29 @@ export class QuizTemplateComponent implements OnChanges {
     // loop and take control values
     for (let i = 0; i < List.length; i++) {
       const c: string = i.toString();
-      // chosen
-      Choices.get(c)?.setValue({
-        id: Choices.get(c)?.value.id,
-        question: Choices.get(c)?.value.question,
-        answer: Choices.get(c)?.value.answer,
-        chosen: true,
+      // need to only assign chosen to chosen one!!
+      List.forEach((comlpeteQuestions: CompleteQuestion): void => {
+        comlpeteQuestions.questions.forEach(
+          (
+            questionsRandomizedInterface: QuestionsRandomizedInterface
+          ): void => {
+            if (
+              Choices.get(c)?.value.question ===
+              questionsRandomizedInterface.question
+            ) {
+              questionsRandomizedInterface.chosen = true;
+            }
+          }
+        );
       });
-      values.push(Choices.get(c)?.value);
     }
+
     // navigate to answer page
     this.router.navigate(['/answers/:'], {
       // passing objects as strings through url
       queryParams: {
-        categories: JSON.stringify(values),
         questions: JSON.stringify(List),
       },
     });
-    console.log('view', values);
   }
 }

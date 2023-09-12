@@ -3,7 +3,7 @@ import { type Routes } from '@angular/router';
 // hence loadComponent
 export const routes: Routes = [
   {
-    path: 'answers/:categories:questions',
+    path: 'answers/:questions',
     loadComponent: async () =>
       await import('../answers-page/answers-page.component').then(
         (mod: any) => mod.AnswersPageComponent

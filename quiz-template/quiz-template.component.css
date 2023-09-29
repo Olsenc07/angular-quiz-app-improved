@@ -1,0 +1,10 @@
+.answer-space{
+    border: 1px solid #000000;
+  }
+  .card{
+    margin: 2% 0%;
+  }
+  .submit{
+    display: flex;
+    justify-content: center;
+  }

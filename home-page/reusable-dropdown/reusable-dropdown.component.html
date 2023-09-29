@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reusable Drop Down</title>
+</head>
+
+<body>
+    <div class="quiz-form-choice">
+        <mat-form-field id="categorySelect" appearance="outline">
+          <mat-label >{{label}}</mat-label>
+        <mat-select [formControl]="input" >
+          <mat-option *ngFor="let list of (List$  | async ); index as i; trackBy: trackByCats;" [value]="category.id">
+            <span [innerHTML]="list.name | bold: input.value">
+            <ng-container *ngIf="list | subCategory as subCategoryValue; else plainValueTemplate">
+                
+                {{subCategoryValue.category}}
+
+                {{subCategoryValue.subCategory}}
+                
+            </ng-container>
+            <ng-template #plainValueTemplate>
+                {{category.name}}
+            </ng-template>
+            </span>
+            {{category.name |  subCategory }}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Try one you don't know</mat-hint>
+        </mat-form-field>
+          </div>
+</body>
+
+<!-- <mat-form-field id="difficultySelect" appearance="outline">
+    <mat-label>Select a difficulty</mat-label>
+  <mat-select formControlName="chosenDifficulty" >
+    <mat-option *ngFor="let difficulty of difficulties;" [value]="difficulty">
+      {{difficulty | titlecase}}
+    </mat-option>
+  </mat-select>
+  <mat-hint>Challenge yourself</mat-hint>
+  </mat-form-field> -->

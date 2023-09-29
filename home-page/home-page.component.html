@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Quiz Selection</title>
+</head>
+
+<body>
+<mat-card>
+<h2 class="title">
+Quiz Maker
+</h2>
+  <mat-card-content>
+<form [formGroup]="quizForm" class="quiz-form" (ngSubmit)="createQuiz()">
+  <div class="title-inside"> Design your quiz: </div>
+  <mat-divider class="divider"></mat-divider>
+<!-- Category selection -->
+<div class="quiz-form-choices">
+<app-reusable-dropdown [label]="Select a category" [List$]="categories$">
+</app-reusable-dropdown>
+  
+<!-- Difficulty selection -->
+<div class="quiz-form-choice">
+  <app-reusable-dropdown  [label]="Select a difficulty" [List$]="difficulties$">
+  </app-reusable-dropdown>
+</div>
+</div>
+
+<!-- create quiz button -->
+<button mat-raised-button color="warn" type="submit" id="createBtn" [disabled]="quizForm.invalid" >
+  <div *ngIf="!(questions$ | async); else more">
+  <label *ngIf="quizForm.invalid; else ready" >
+    Select Options
+  </label>
+<ng-template #ready >
+  Create
+</ng-template>
+</div>
+<ng-template #more >
+  Create Another
+</ng-template>
+</button>
+</form>
+</mat-card-content>
+</mat-card>
+
+<!-- Display 5 question quiz based on inputs -->
+<ng-container  *ngIf="questions$ | async">
+  <h2>Good Luck!</h2> 
+  <div class="questions">
+<app-quiz-template [question]="(questions$ | async)" ></app-quiz-template>
+  </div>
+</ng-container>
+</body>
+</html>

@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'typeof'
 })
 export class TypeOfPipe implements PipeTransform {
-  transform(value: any): boolean {
+  transform(value: object | string): boolean {
     return typeof value === 'object';
   }
 }

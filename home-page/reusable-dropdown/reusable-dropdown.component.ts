@@ -45,7 +45,8 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
 })
 export class ReusableDropdownComponent {
 input: FormControl<null | CategoryDataInterface['name']> = new FormControl<null | CategoryDataInterface['name']>(null);
-
+uniqueCategories = new Set<string>(); 
+newList: any = []
 @Input() label!: string;
 // From parent
 @Input() List$: Observable<CategoryDataInterface[]>;
@@ -61,8 +62,26 @@ constructor(private quizCategoriesDataService :QuizCategoriesDataService) {
     )
      )
 }
- isObject(value: any): value is { category: string, subCategory: string } {
-  return typeof value === 'object' && value !== null && 'category' in value;
+
+// no repeating categories
+noRepeats(value: string | { category: string, subCategory: string }): any{
+// pass list with no repeats
+// filter out repeating category options
+// for each and filter through categoryValue and pus to newList
+// creates new list without repeats
+return typeof value === 'object'  && 'category' in value;
 }
 
+// checking how to render values
+isObject(value: string | { category: string, subCategory: string }): value is { category: string, subCategory: string } {
+  if (typeof value === 'object' && value !== null) {
+    if ('category' in value && 'subCategory' in value) {
+      if (!this.uniqueCategories.has(value.category)) {
+        this.uniqueCategories.add(value.category);
+        return true;
+      }
+    }
+  }
+  return false;
+}
 }

@@ -42,9 +42,9 @@ export class HomePageComponent implements OnInit {
   categories$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   difficulties: CategoryDataInterface[] = [
-    { name: 'easy' },
-    { name: 'medium' },
-    { name: 'hard' }
+    { id: 0, name: 'easy' },
+    { id: 1, name: 'medium' },
+    { id:2,  name: 'hard' }
   ];
   // Quiz
   quizMade: boolean = false;
@@ -63,7 +63,13 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
+    this.categories$.subscribe((x) => {
+      console.log('1', x);
+    })
     this.difficulties$ = of(this.difficulties);
+    this.difficulties$.subscribe((x) => {
+      console.log('2', x);
+    })
   }
 
   // create quiz

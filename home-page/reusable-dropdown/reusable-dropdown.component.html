@@ -11,31 +11,27 @@
           <mat-label >{{label}}</mat-label>
         <mat-select [formControl]="input" >
           <!-- index as i; trackBy: trackByCats; -->
-           <ng-container *ngIf="(List$  | async ) as Lists">
-          <mat-option *ngFor="let list of Lists;" [value]="list.id">
-            <span [innerHTML]="list.name | bold: input.value!">
-            <ng-container *ngIf="list.name | subCategory as subCategoryValue;">
-         
+           <ng-container *ngFor="let list of (List$  | async ) as Lists">
+          <mat-option *ngIf="(list.name | subCategory) as categoryValue" [value]="list.name">
+            <!-- <span [innerHTML]="list.name | bold: input.value!"> -->
               <!-- category has a sub category (Entertainment or Science) -->
-              <span *ngIf="isObject(subCategoryValue)">
-                
-                {{ subCategoryValue.category }}
-            
-       
-            
-                {{subCategoryValue.subCategory}}
-              </span>
-                
+              <ng-container *ngIf="noRepeats(categoryValue); else basic" >
+
+              <ng-container *ngIf="isObject(newList); else basic" >
+                <!-- if this value is chosen as input value
+                  this should trigger an event that tells the parent that a cat has been chosen
+                then to render a second input that gets the final form control value -->
+                {{ categoryValue.category }}
+              </ng-container>
             </ng-container>
-            <ng-template #stringValueTemplate>
+
+
+              <ng-template #basic>
                 {{list.name}}
-            </ng-template>
-            </span>
- 
+              </ng-template>
           </mat-option>
         </ng-container>
         </mat-select>
-        <mat-hint>Try one you don't know</mat-hint>
         </mat-form-field>
           </div>
 </body>

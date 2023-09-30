@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -50,6 +50,20 @@ newList: any = []
 @Input() label!: string;
 // From parent
 @Input() List$: Observable<CategoryDataInterface[]>;
+
+
+@Input() set selected(value: T){
+  if (value) {
+    this.input.setValue(value.description);
+  } else {
+    this.input.setValue('');
+  }
+}
+  // Child to Parent
+  @Output() selectedChange: EventEmitter<CategoryDataInterface['name']> =
+   new EventEmitter<CategoryDataInterface['name']>();
+
+
 
 constructor(private quizCategoriesDataService :QuizCategoriesDataService) { 
   this.List$ = combineLatest([this.input.valueChanges.pipe(

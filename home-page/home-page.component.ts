@@ -63,13 +63,14 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
-    this.categories$.subscribe((x) => {
-      console.log('1', x);
-    })
+   
     this.difficulties$ = of(this.difficulties);
-    this.difficulties$.subscribe((x) => {
-      console.log('2', x);
-    })
+  }
+
+  updateSelection(country: Country) {
+    this.country = country;
+    this.state = null;
+    this.currentCountry$.next(country);
   }
 
   // create quiz

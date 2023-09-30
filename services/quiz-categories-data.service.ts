@@ -8,21 +8,19 @@ import { NestedCategoryInterface } from '../interfaces/nested-category-interface
   providedIn: 'root',
 })
 export class QuizCategoriesDataService {
-  private categories$: Observable<CategoryDataInterface[]> = new Observable<
-  CategoryDataInterface[]
->();
+  private categories$: Observable<CategoryDataInterface[]> | null = null;
   // Direct Injection
   constructor(private http: HttpClient) {}
   // get category data from api
   getCategoryData(): Observable<CategoryDataInterface[]> {
     if(!this.categories$) {
-    return this.http
+    this.categories$ = this.http
       .get<NestedCategoryInterface>('https://opentdb.com/api_category.php')
       .pipe(
         map((data: NestedCategoryInterface) => data.trivia_categories),
         shareReplay(1),
         catchError((err) => {
-          throw 'error in request' + err;
+          throw 'error in category request' + err;
         })
       );
     }

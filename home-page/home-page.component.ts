@@ -38,30 +38,22 @@ import { ReusableDropdownComponent } from './reusable-dropdown/reusable-dropdown
   ],
 })
 export class HomePageComponent implements OnInit {
-  // quiz questions
-  questions$: Observable<QuizQuestionsInterface[]> = new Observable<
-    QuizQuestionsInterface[]
-  >();
-
-
-
   // quiz maker options
-  categories$: Observable<CategoryDataInterface[]> = new Observable<
-    CategoryDataInterface[]
-  >();
-
-  difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>
+  categories$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
+  difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   difficulties: CategoryDataInterface[] = [
     { name: 'easy' },
     { name: 'medium' },
     { name: 'hard' }
   ];
+  // Quiz
   quizMade: boolean = false;
-
+  questions$: Observable<QuizQuestionsInterface[]> = new Observable<QuizQuestionsInterface[]>;
   quizForm: FormGroup = new FormGroup({
     chosenCategory: new FormControl<string | null>('', [Validators.required]),
     chosenDifficulty: new FormControl<string | null>('', [Validators.required]),
   });
+
 
   constructor(
     private quizCategoriesDataService: QuizCategoriesDataService,
@@ -71,7 +63,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
-    this.difficulties$ = of(this.difficulties)
+    this.difficulties$ = of(this.difficulties);
   }
 
   // create quiz

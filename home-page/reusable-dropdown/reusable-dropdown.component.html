@@ -16,22 +16,22 @@
             <span [innerHTML]="list.name | bold: input.value!">
             <ng-container *ngIf="list.name | subCategory as subCategoryValue;">
          
-              
+              <!-- category has a sub category (Entertainment or Science) -->
               <span *ngIf="isObject(subCategoryValue)">
+                
                 {{ subCategoryValue.category }}
             
        
-              
-
+            
                 {{subCategoryValue.subCategory}}
               </span>
                 
             </ng-container>
             <ng-template #stringValueTemplate>
-                {{category.name}}
+                {{list.name}}
             </ng-template>
             </span>
-            {{category.name |  subCategory }}
+ 
           </mat-option>
         </ng-container>
         </mat-select>

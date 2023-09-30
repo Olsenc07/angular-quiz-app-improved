@@ -16,14 +16,12 @@ Quiz Maker
   <mat-divider class="divider"></mat-divider>
 <!-- Category selection -->
 <div class="quiz-form-choices">
-<app-reusable-dropdown [label]="Select a category" [List$]="categories$">
-</app-reusable-dropdown>
-  
-<!-- Difficulty selection -->
-<div class="quiz-form-choice">
-  <app-reusable-dropdown  [label]="Select a difficulty" [List$]="difficulties$">
+  <app-reusable-dropdown [label]="'Select a category'" [List$]="categories$">
   </app-reusable-dropdown>
-</div>
+<!-- Difficulty selection -->
+  <app-reusable-dropdown  [label]="'Select a difficulty'" [List$]="difficulties$">
+  </app-reusable-dropdown>
+
 </div>
 
 <!-- create quiz button -->

@@ -10,21 +10,30 @@
         <mat-form-field id="categorySelect" appearance="outline">
           <mat-label >{{label}}</mat-label>
         <mat-select [formControl]="input" >
-          <mat-option *ngFor="let list of (List$  | async ); index as i; trackBy: trackByCats;" [value]="category.id">
-            <span [innerHTML]="list.name | bold: input.value">
-            <ng-container *ngIf="list | subCategory as subCategoryValue; else plainValueTemplate">
-                
-                {{subCategoryValue.category}}
+          <!-- index as i; trackBy: trackByCats; -->
+           <ng-container *ngIf="(List$  | async ) as Lists">
+          <mat-option *ngFor="let list of Lists;" [value]="list.id">
+            <span [innerHTML]="list.name | bold: input.value!">
+            <ng-container *ngIf="list.name | subCategory as subCategoryValue;">
+         
+              
+              <span *ngIf="isObject(subCategoryValue)">
+                {{ subCategoryValue.category }}
+            
+       
+              
 
                 {{subCategoryValue.subCategory}}
+              </span>
                 
             </ng-container>
-            <ng-template #plainValueTemplate>
+            <ng-template #stringValueTemplate>
                 {{category.name}}
             </ng-template>
             </span>
             {{category.name |  subCategory }}
           </mat-option>
+        </ng-container>
         </mat-select>
         <mat-hint>Try one you don't know</mat-hint>
         </mat-form-field>

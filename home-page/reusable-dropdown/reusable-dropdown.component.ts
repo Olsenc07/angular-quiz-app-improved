@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../../services/quiz-categories-data.service';
-import { type CategoryDataInterface } from '../../interfaces/category-interface';
+import  { type CategoryDataInterface } from '../../interfaces/category-interface';
 import { Observable, combineLatest, debounceTime, distinctUntilChanged, map, withLatestFrom } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
@@ -19,6 +19,8 @@ import { QuizTemplateComponent } from '../../quiz-template/quiz-template.compone
 import { MatDividerModule } from '@angular/material/divider';
 import { IdentifySubCategoryPipe } from '../../pipes/identify-sub-category.pipe';
 import { BoldPipe } from '../../pipes/bold.pipe';
+import { TypeOfPipe } from '../../pipes/typeof.pipe';
+
 
 
 @Component({
@@ -37,11 +39,12 @@ import { BoldPipe } from '../../pipes/bold.pipe';
     CommonModule,
     ReusableDropdownComponent,
     IdentifySubCategoryPipe,
-    BoldPipe
+    BoldPipe,
+    TypeOfPipe
   ]
 })
 export class ReusableDropdownComponent {
-  input: FormControl<null | CategoryDataInterface['name']> = new FormControl<null | CategoryDataInterface['name']>(null);
+input: FormControl<null | CategoryDataInterface['name']> = new FormControl<null | CategoryDataInterface['name']>(null);
 
 @Input() label!: string;
 // From parent
@@ -57,6 +60,9 @@ constructor(private quizCategoriesDataService :QuizCategoriesDataService) {
       )
     )
      )
+}
+ isObject(value: any): value is { category: string, subCategory: string } {
+  return typeof value === 'object' && value !== null && 'category' in value;
 }
 
 }

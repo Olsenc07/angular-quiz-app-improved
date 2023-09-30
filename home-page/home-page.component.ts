@@ -7,8 +7,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../services/quiz-categories-data.service';
-import { type CategoryDataInterface } from '../interfaces/category-interface';
-import { Observable } from 'rxjs';
+import  { type CategoryDataInterface } from '../interfaces/category-interface';
+import {  Observable, of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,12 +42,20 @@ export class HomePageComponent implements OnInit {
   questions$: Observable<QuizQuestionsInterface[]> = new Observable<
     QuizQuestionsInterface[]
   >();
+
+
+
   // quiz maker options
   categories$: Observable<CategoryDataInterface[]> = new Observable<
     CategoryDataInterface[]
   >();
 
-  difficulties: string[] = ['easy', 'medium', 'hard'];
+  difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>
+  difficulties: CategoryDataInterface[] = [
+    { name: 'easy' },
+    { name: 'medium' },
+    { name: 'hard' }
+  ];
   quizMade: boolean = false;
 
   quizForm: FormGroup = new FormGroup({
@@ -63,6 +71,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // get catgeory data
     this.categories$ = this.quizCategoriesDataService.getCategoryData();
+    this.difficulties$ = of(this.difficulties)
   }
 
   // create quiz

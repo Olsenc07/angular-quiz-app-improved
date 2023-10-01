@@ -25,6 +25,7 @@
   }
   .quiz-form-choice{
     display: flex ;
+    flex-direction:column;
     margin: 2%;
   }
   }
@@ -38,6 +39,7 @@
     }
     .quiz-form-choice{
       display: flex ;
+      flex-direction:column;
       margin-bottom: 2%;
     }
     }

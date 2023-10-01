@@ -41,7 +41,11 @@ export class HomePageComponent implements OnInit {
   // quiz maker options
   categories$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   subCategories$: Observable<CategoryDataInterface[]> | null = null;
-  subCategory: CategoryDataInterface | null = null;
+  default: CategoryDataInterface = {
+    id: NaN,
+    name: ''
+  }
+  subCategory: CategoryDataInterface = this.default;
   difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   difficulties: CategoryDataInterface[] = [
     { id: 0, name: 'easy' },
@@ -70,9 +74,8 @@ export class HomePageComponent implements OnInit {
 
   updateSelection(category: CategoryDataInterface) {
     // get subCategory list
-    this.subCategory = null;
+    this.subCategory = this.default;
     this.subCategories$ = this.quizCategoriesDataService.getSubCategoryData(category.name);
-    
   }
 
   // create quiz

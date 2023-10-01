@@ -8,11 +8,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../../services/quiz-categories-data.service';
 import  { type CategoryDataInterface } from '../../interfaces/category-interface';
-import { Observable, combineLatest, debounceTime, distinctUntilChanged, map, withLatestFrom } from 'rxjs';
+import { Observable, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateQuizService } from '../../services/create-quiz.service';
+import {MatInputModule} from '@angular/material/input';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { QuizTemplateComponent } from '../../quiz-template/quiz-template.component';
@@ -27,10 +29,12 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
   standalone: true,
   selector: 'app-reusable-dropdown',
   templateUrl: './reusable-dropdown.component.html',
-  styleUrls: ['./reusable-dropdown.component.css'],
+  styleUrls: ['../home-page.component.css'],
   imports: [
     ReactiveFormsModule,
+    MatInputModule,
     MatFormFieldModule,
+    MatAutocompleteModule,
     MatDividerModule,
     MatCardModule,
     HttpClientModule,
@@ -44,7 +48,14 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
   ]
 })
 export class ReusableDropdownComponent {
-input: FormControl<null | CategoryDataInterface> = new FormControl<null | CategoryDataInterface>(null);
+  default: CategoryDataInterface = {
+    id: NaN,
+    name: ''
+  }
+// simply used to display drop down filtered options
+typedFilter: FormControl<string | null> = new FormControl<string | null>('');
+// Input that is actulaly stored for later createQuiz()
+input: FormControl<CategoryDataInterface | null> = new FormControl<CategoryDataInterface | null>(this.default);
 uniqueCategories = new Set<string>(); 
 newList: any = []
 @Input() label!: string;
@@ -52,11 +63,11 @@ newList: any = []
 @Input() List$: Observable<CategoryDataInterface[]>;
 
 
-@Input() set selected(value: CategoryDataInterface | null){
+@Input() set selected(value: CategoryDataInterface){
   if (value) {
     this.input.setValue(value);
   } else {
-    this.input.setValue(null);
+    this.input.setValue(this.default);
   }
 }
   // Child to Parent
@@ -64,16 +75,22 @@ newList: any = []
    new EventEmitter<CategoryDataInterface>();
 
 constructor(private quizCategoriesDataService :QuizCategoriesDataService) { 
-  this.List$ = combineLatest([this.input.valueChanges.pipe(
-    debounceTime(500), distinctUntilChanged()),
-    this.quizCategoriesDataService.getCategoryData()]).pipe(
-      map(([typed, categories]) =>
+  this.List$ = this.typedFilter.valueChanges.pipe(
+    debounceTime(500), distinctUntilChanged(),
+    startWith(''),
+    switchMap((typed) => {
+      return this.quizCategoriesDataService.getCategoryData().pipe(
+      map((categories) =>
       categories.filter((category: CategoryDataInterface) =>
-      category.name.toLowerCase().indexOf(typed!.name.toLowerCase()) !== -1
+      category.name.toLowerCase().indexOf(typed!.toLowerCase()) !== -1
       )
-    )
-     )
-}
+    ))
+}))
+     
+     this.List$.subscribe((x) => {
+      console.group('x',x)
+     })
+    }
 
 newSelection(entry: CategoryDataInterface) {
   this.input.setValue(entry);

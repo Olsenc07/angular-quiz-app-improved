@@ -7,32 +7,19 @@
 
 <body>
     <div class="quiz-form-choice">
-        <mat-form-field id="categorySelect" appearance="outline">
-          <mat-label >{{label}}</mat-label>
-        <mat-select [formControl]="input" >
-          <!-- index as i; trackBy: trackByCats; -->
-           <ng-container *ngFor="let list of (List$  | async ) as Lists">
-          <mat-option *ngIf="(list.name | hideBeforeColon)" [value]="list.name">
-            <!-- <span [innerHTML]="list.name | bold: input.value!"> -->
-              <!-- category has a sub category (Entertainment or Science) -->
+      <!-- filter by typing -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{label}}</mat-label>
+      <input matInput type="text" [formControl]="typedFilter" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <ng-container *ngFor="let list  of (List$  | async ) as Lists">
+          <mat-option *ngIf="(list.name | hideBeforeColon)" [value]="list">
               <span (click)="newSelection(list)"
-              [innerHTML]="list.name | bold: input.value!.name">
-        </span>
-                {{list.name}}
-
+              [innerHTML]="list.name | titlecase | bold: typedFilter.value! ">
+              </span>
           </mat-option>
         </ng-container>
-        </mat-select>
-        </mat-form-field>
+      </mat-autocomplete>
+    </mat-form-field>
           </div>
 </body>
-
-<!-- <mat-form-field id="difficultySelect" appearance="outline">
-    <mat-label>Select a difficulty</mat-label>
-  <mat-select formControlName="chosenDifficulty" >
-    <mat-option *ngFor="let difficulty of difficulties;" [value]="difficulty">
-      {{difficulty | titlecase}}
-    </mat-option>
-  </mat-select>
-  <mat-hint>Challenge yourself</mat-hint>
-  </mat-form-field> -->

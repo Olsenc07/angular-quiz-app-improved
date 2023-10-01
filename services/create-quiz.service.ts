@@ -14,6 +14,7 @@ export class CreateQuizService {
   constructor(private http: HttpClient) {}
   // create quiz from api
   createQuiz(
+    // category is id
     category: string,
     difficulty: string
   ): Observable<QuizQuestionsInterface[]> {

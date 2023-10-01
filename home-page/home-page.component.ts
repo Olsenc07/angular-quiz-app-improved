@@ -67,11 +67,11 @@ export class HomePageComponent implements OnInit {
     this.difficulties$ = of(this.difficulties);
   }
 
-  updateSelection(country: Country) {
-    this.country = country;
-    this.state = null;
-    this.currentCountry$.next(country);
-  }
+  // updateSelection(country: Country) {
+  //   this.country = country;
+  //   this.state = null;
+  //   this.currentCountry$.next(country);
+  // }
 
   // create quiz
   createQuiz(): void {

@@ -12,23 +12,15 @@
         <mat-select [formControl]="input" >
           <!-- index as i; trackBy: trackByCats; -->
            <ng-container *ngFor="let list of (List$  | async ) as Lists">
-          <mat-option *ngIf="(list.name | subCategory) as categoryValue" [value]="list.name">
+          <mat-option *ngIf="(list.name | hideBeforeColon)" [value]="list.name">
             <!-- <span [innerHTML]="list.name | bold: input.value!"> -->
               <!-- category has a sub category (Entertainment or Science) -->
-              <ng-container *ngIf="noRepeats(categoryValue); else basic" >
-
-              <ng-container *ngIf="isObject(newList); else basic" >
-                <!-- if this value is chosen as input value
-                  this should trigger an event that tells the parent that a cat has been chosen
-                then to render a second input that gets the final form control value -->
-                {{ categoryValue.category }}
-              </ng-container>
-            </ng-container>
+              
 
 
-              <ng-template #basic>
+             
                 {{list.name}}
-              </ng-template>
+
           </mat-option>
         </ng-container>
         </mat-select>

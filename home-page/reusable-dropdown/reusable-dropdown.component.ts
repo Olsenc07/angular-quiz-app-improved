@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { QuizTemplateComponent } from '../../quiz-template/quiz-template.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { IdentifySubCategoryPipe } from '../../pipes/identify-sub-category.pipe';
+import { HideBeforeColonPipe } from '../../pipes/hide-category.pipe';
 import { BoldPipe } from '../../pipes/bold.pipe';
 import { TypeOfPipe } from '../../pipes/typeof.pipe';
 
@@ -38,7 +38,7 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
     MatButtonModule,
     CommonModule,
     ReusableDropdownComponent,
-    IdentifySubCategoryPipe,
+    HideBeforeColonPipe,
     BoldPipe,
     TypeOfPipe
   ]
@@ -52,13 +52,13 @@ newList: any = []
 @Input() List$: Observable<CategoryDataInterface[]>;
 
 
-@Input() set selected(value: T){
-  if (value) {
-    this.input.setValue(value.description);
-  } else {
-    this.input.setValue('');
-  }
-}
+// @Input() set selected(value: T){
+//   if (value) {
+//     this.input.setValue(value.description);
+//   } else {
+//     this.input.setValue('');
+//   }
+// }
   // Child to Parent
   @Output() selectedChange: EventEmitter<CategoryDataInterface['name']> =
    new EventEmitter<CategoryDataInterface['name']>();

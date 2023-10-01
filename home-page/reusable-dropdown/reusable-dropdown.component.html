@@ -15,10 +15,9 @@
           <mat-option *ngIf="(list.name | hideBeforeColon)" [value]="list.name">
             <!-- <span [innerHTML]="list.name | bold: input.value!"> -->
               <!-- category has a sub category (Entertainment or Science) -->
-              
-
-
-             
+              <span (click)="newSelection(list)"
+              [innerHTML]="list.name | bold: input.value!.name">
+        </span>
                 {{list.name}}
 
           </mat-option>

@@ -44,7 +44,7 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
   ]
 })
 export class ReusableDropdownComponent {
-input: FormControl<null | CategoryDataInterface['name']> = new FormControl<null | CategoryDataInterface['name']>(null);
+input: FormControl<null | CategoryDataInterface> = new FormControl<null | CategoryDataInterface>(null);
 uniqueCategories = new Set<string>(); 
 newList: any = []
 @Input() label!: string;
@@ -52,50 +52,31 @@ newList: any = []
 @Input() List$: Observable<CategoryDataInterface[]>;
 
 
-// @Input() set selected(value: T){
-//   if (value) {
-//     this.input.setValue(value.description);
-//   } else {
-//     this.input.setValue('');
-//   }
-// }
+@Input() set selected(value: CategoryDataInterface | null){
+  if (value) {
+    this.input.setValue(value);
+  } else {
+    this.input.setValue(null);
+  }
+}
   // Child to Parent
-  @Output() selectedChange: EventEmitter<CategoryDataInterface['name']> =
-   new EventEmitter<CategoryDataInterface['name']>();
-
-
+  @Output() selectedChange: EventEmitter<CategoryDataInterface> =
+   new EventEmitter<CategoryDataInterface>();
 
 constructor(private quizCategoriesDataService :QuizCategoriesDataService) { 
   this.List$ = combineLatest([this.input.valueChanges.pipe(
     debounceTime(500), distinctUntilChanged()),
     this.quizCategoriesDataService.getCategoryData()]).pipe(
-      map(([input, categories]) =>
+      map(([typed, categories]) =>
       categories.filter((category: CategoryDataInterface) =>
-      category.name.toLowerCase().indexOf(input!.toLowerCase()) !== -1
+      category.name.toLowerCase().indexOf(typed!.name.toLowerCase()) !== -1
       )
     )
      )
 }
 
-// no repeating categories
-noRepeats(value: string | { category: string, subCategory: string }): any{
-// pass list with no repeats
-// filter out repeating category options
-// for each and filter through categoryValue and pus to newList
-// creates new list without repeats
-return typeof value === 'object'  && 'category' in value;
-}
-
-// checking how to render values
-isObject(value: string | { category: string, subCategory: string }): value is { category: string, subCategory: string } {
-  if (typeof value === 'object' && value !== null) {
-    if ('category' in value && 'subCategory' in value) {
-      if (!this.uniqueCategories.has(value.category)) {
-        this.uniqueCategories.add(value.category);
-        return true;
-      }
-    }
-  }
-  return false;
+newSelection(entry: CategoryDataInterface) {
+  this.input.setValue(entry);
+  this.selectedChange.emit(entry);
 }
 }

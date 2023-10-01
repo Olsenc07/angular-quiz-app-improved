@@ -18,14 +18,14 @@ Quiz Maker
 <div class="quiz-form-choices">
   <!-- (selectionChange)="updateSelection($event)" -->
   <app-reusable-dropdown [label]="'Select a category'" [List$]="categories$"
-  >
+  (selectedChange)="updateSelection($event)">
   </app-reusable-dropdown>
   <!-- sub category selection -->
-  <!-- <ng-container *ngIf="needSubCategory">
+  <ng-container *ngIf="subCategories$">
   <app-reusable-dropdown [label]="'Select a subcategory'" [List$]="subCategories$"
-  [(selection)]="subCategory">
+  [(selected)]="subCategory">
   </app-reusable-dropdown>
-</ng-container> -->
+</ng-container>
 <!-- Difficulty selection -->
   <app-reusable-dropdown  [label]="'Select a difficulty'" [List$]="difficulties$">
   </app-reusable-dropdown>

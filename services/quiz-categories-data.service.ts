@@ -32,7 +32,6 @@ export class QuizCategoriesDataService {
   }
 
 
-
   getSubCategoryData(category: string): Observable<CategoryDataInterface[]> {
     const filteredSubCategory = of(this.subList).pipe(
       map(options => options!.filter((item) => {
@@ -52,7 +51,7 @@ export class QuizCategoriesDataService {
       this.subList.push({
         id: cat.id, name: cat.name
       })
-      // only push if this cat.name.split(':')[0] hasnt't alreayd been added
+      // only push if this category hasnt't already been added
       const categoryPart = cat.name.split(':')[0];
       if (!noRepeats.some(item => item.name === categoryPart)) {
         noRepeats.push({

@@ -16,10 +16,11 @@ export class CreateQuizService {
   createQuiz(
     // category is id
     category: string,
-    difficulty: string
+    difficulty: string,
+    numberOfQuestions: number
   ): Observable<QuizQuestionsInterface[]> {
     const params = {
-      amount: 5,
+      amount: numberOfQuestions,
       category: category,
       difficulty: difficulty,
       encode: 'url3986',

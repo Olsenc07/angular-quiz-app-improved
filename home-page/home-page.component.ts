@@ -47,10 +47,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
   private subCategorySub?: Subscription;
   difficulties$: Observable<CategoryDataInterface[]> = new Observable<CategoryDataInterface[]>;
   difficulties: CategoryDataInterface[] = [
-    { id: 0, name: 'Easy' }, // uppercase is more asthetically pleasing
+    { id: 0, name: 'Easy' }, // uppercase is more aesthetically pleasing
     { id: 1, name: 'Medium' },
     { id:2,  name: 'Hard' } 
   ];
+
   // Quiz
   quizMade: boolean = false;
   questions$: Observable<QuizQuestionsInterface[]> = new Observable<QuizQuestionsInterface[]>;
@@ -76,19 +77,18 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   updateSelection(category: CategoryDataInterface) {
     // get subCategory list
-// This doesnt get triggered properly
-// Or gets reset if no values were past in this.quizCategoriesDataService.getSubCategoryData(category.name);
-  console.log('triggered');
-
   this.subCategories$ = this.quizCategoriesDataService.getSubCategoryData(category.name);
   this.subCategorySub = this.subCategories$.subscribe({
     next: (data) => {
-      console.log('a',data);
       if(data.length > 0){
-        console.log('d',data);
         this.subCategoriesLoaded = true;
+        if(this.quizForm.controls['chosenCategory'].value){
+        this.quizForm.controls['chosenCategory'].setValue(null)
+        }
       }else{
         this.subCategoriesLoaded = false;
+        // assign category to formcontrol
+        this.quizForm.controls['chosenCategory'].setValue(category.id)
       }
     },
     error: (error) => {
@@ -97,20 +97,28 @@ export class HomePageComponent implements OnInit, OnDestroy {
     }
   });
   }
-
+  // assign too formcontrols
+  setSubFormControl(formValue: CategoryDataInterface){
+    this.quizForm.controls['chosenCategory'].setValue(formValue.id);
+  }
+  setDifFormControl(difficulyValue: CategoryDataInterface ){
+    // query requires lower case
+    this.quizForm.controls['chosenDifficulty'].setValue(difficulyValue.name.toLowerCase());
+  }
   // create quiz
   createQuiz(): void {
     this.questions$ = this.createQuizService.createQuiz(
-      this.quizForm.controls['chosenCategory'].value.id, 
-      this.quizForm.controls['chosenDifficulty'].value.name.toLowerCase() // query requires lower case
+      this.quizForm.controls['chosenCategory'].value, 
+      this.quizForm.controls['chosenDifficulty'].value,
+      5
     );
   }
 
   // efficent rendering
-  trackByCats(i: number, category: CategoryDataInterface): string {
-    return category.name;
-  }
-  trackByDifficulty(i: number, difficulty: string): string {
-    return difficulty;
-  }
+  // trackByCats(i: number, category: CategoryDataInterface): string {
+  //   return category.name;
+  // }
+  // trackByDifficulty(i: number, difficulty: string): string {
+  //   return difficulty;
+  // }
 }

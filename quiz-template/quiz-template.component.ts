@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
@@ -17,7 +17,9 @@ import { SpecialCharacterPipe } from '../pipes/special-character.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { CompleteQuestion } from '../interfaces/complete-question-interface';
-
+import { CreateQuizService } from '../services/create-quiz.service';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-quiz-template',
@@ -33,19 +35,22 @@ import { CompleteQuestion } from '../interfaces/complete-question-interface';
     MatChipsModule,
     SpecialCharacterPipe,
     MatInputModule,
+    MatTooltipModule
   ],
 })
-export class QuizTemplateComponent implements OnChanges {
+export class QuizTemplateComponent implements OnChanges, OnDestroy {
   valid: boolean = false;
-
   // create forms
   answersForm = this.fb.group({});
+  // Only used once
+  newQuestionSub?: Subscription;
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly router: Router
+    private readonly router: Router,
+    private createQuizService: CreateQuizService
   ) {}
-
+  
   // Define arrays
   answerList: QuestionsRandomizedInterface[] = [];
   completeList: CompleteQuestion[] = [];
@@ -53,36 +58,49 @@ export class QuizTemplateComponent implements OnChanges {
   // Recieve data from parent
   @Input({ required: true })
   question: QuizQuestionsInterface[] | null | undefined;
+  // input original params to create quiz
+  @Input({ required: true })
+  params: FormGroup | undefined;
   ngOnChanges(): void {
+    console.log('params', this.params)
     // create new array after making objects of answers
     // to indicate correct or incorrect answers
     // assign which question these answers were in
     if (this.question?.length) {
-      for (let i = 0; i < this.question.length; i++) {
-        this.answerList.push({
-          id: i,
-          question: this.question![i].correct_answer,
-          answer: true,
-        });
-        for (const c of this.question![i].incorrect_answers) {
-          this.answerList.push({
-            id: i,
-            question: c,
-            answer: false,
-          });
-        }
-        this.randomizeQuestions(this.question![i].question);
-        const name: string = i.toString();
-        this.answersForm.addControl(
-          name,
-          this.fb.control<string>('', [Validators.required])
-        );
+     this.addAnswer(this.question, true);
       }
     }
+  
+  addAnswer(q: QuizQuestionsInterface[], originalQ: boolean, swapIndex?: number) {
+  for (let i = 0; i < q.length; i++) {
+    this.answerList.push({
+      id: i,
+      question: q![i].correct_answer,
+      answer: true,
+    });
+    for (const c of q![i].incorrect_answers) {
+      this.answerList.push({
+        id: i,
+        question: c,
+        answer: false,
+      });
+    }
+    if(originalQ){
+    // add only for first input, not when question is swapped
+    this.randomizeQuestions(q![i].question);
+    const name: string = i.toString();
+    this.answersForm.addControl(
+      name,
+      this.fb.control<string>('', [Validators.required])
+    );
+    }else{
+      // swap answer
+      this.randomizeQuestions(q![i].question, swapIndex)
+    }
   }
-
+}
   // Randomize questions
-  private randomizeQuestions(title: string): void {
+  private randomizeQuestions(title: string, swapIndex?: number): void {
     const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
     const length: number = this.answerList.length;
     for (let i = 0; i < length; i++) {
@@ -93,11 +111,35 @@ export class QuizTemplateComponent implements OnChanges {
         this.answerList.splice(randomize, 1);
       randomizedAnswerList.push(selectedQuestion[0]);
     }
+    if(typeof swapIndex === 'number'){
+      // replace old question
+      this.completeList[swapIndex] = {
+        title,
+        questions: randomizedAnswerList,
+      }
+    }else{
+      // creating original list
     this.completeList.push({
       title,
       questions: randomizedAnswerList,
     });
+    };
   }
+
+// One use per quiz
+swapQuestion(index: number){
+ const swapIndex = index
+  // needs to make a request for one
+  this.newQuestionSub = this.createQuizService.createQuiz(
+    this.params!.controls['chosenCategory'].value, 
+      this.params!.controls['chosenDifficulty'].value,
+    1
+  ).subscribe((replacementQuestion: QuizQuestionsInterface[]) => {
+    // need to add chosne stuff first
+    this.addAnswer(replacementQuestion, false, swapIndex)
+    // this.randomizeQuestions(replacementQuestion[0].question, swapIndex);
+  })
+}
 
   // efficient array rending
   trackByList(index: number, list: CompleteQuestion): CompleteQuestion {
@@ -151,7 +193,6 @@ export class QuizTemplateComponent implements OnChanges {
         );
       });
     }
-
     // navigate to answer page
     this.router.navigate(['/answers/:'], {
       // passing objects as strings through url
@@ -159,5 +200,10 @@ export class QuizTemplateComponent implements OnChanges {
         questions: JSON.stringify(List),
       },
     });
+  }
+  //clean up
+  ngOnDestroy(): void {
+    // if sub has been made
+    this.newQuestionSub?.unsubscribe();
   }
 }

@@ -4,6 +4,9 @@
   .card{
     margin: 2% 0%;
   }
+  .change{
+    color: blue;
+  }
   .submit{
     display: flex;
     justify-content: center;

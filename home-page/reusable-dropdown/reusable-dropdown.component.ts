@@ -48,33 +48,19 @@ import { TypeOfPipe } from '../../pipes/typeof.pipe';
   ]
 })
 export class ReusableDropdownComponent {
-  default: CategoryDataInterface = {
-    id: NaN,
-    name: ''
-  }
 // simply used to display drop down filtered options
 typedFilter: FormControl<string | null> = new FormControl<string | null>('');
-// Input that is actulaly stored for later createQuiz()
-input: FormControl<CategoryDataInterface | null> = new FormControl<CategoryDataInterface | null>(this.default);
 // From parent
 @Input() label: string | null = null;;
 @Input() hint: string | null = null;
-@Input()
-List$!: Observable<CategoryDataInterface[]>;
+@Input()List$!: Observable<CategoryDataInterface[]>;
   // Define an initial list as a BehaviorSubject
 initialList$: BehaviorSubject<CategoryDataInterface[]> = new BehaviorSubject<CategoryDataInterface[]>([]);
 
 
-@Input() set selected(value: CategoryDataInterface){
-  if (value) {
-    // add to category needed
-    this.input.setValue(value);
-  } else {
-    this.input.setValue(this.default);
-  }
-}
   // Child to Parent
   @Output() selectedChange: EventEmitter<CategoryDataInterface> = new EventEmitter<CategoryDataInterface>();
+  @Output() difficultyFormControl: EventEmitter<CategoryDataInterface> = new EventEmitter<CategoryDataInterface>();
 
 constructor() {};
 
@@ -94,10 +80,14 @@ ngOnInit(){
           ))
 }
 
-
 newSelection(entry: CategoryDataInterface) {
-  this.input.setValue(entry);
+if(this.hint == 'Challenge yourself'){
+  this.difficultyFormControl.emit(entry);
+  console.log('dif');
+}else{
   this.selectedChange.emit(entry);
-  console.log('fire');
+  console.log('cat or sub');
+
+}
 }
 }

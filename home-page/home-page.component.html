@@ -23,11 +23,12 @@ Quiz Maker
   <!-- sub category selection -->
   <ng-container *ngIf="subCategoriesLoaded">
   <app-reusable-dropdown [label]="'Select a subcategory'" [List$]="subCategories$"
-   >
+  (selectedChange)="setSubFormControl($event)">
   </app-reusable-dropdown>
 </ng-container>
 <!-- Difficulty selection -->
-  <app-reusable-dropdown  [label]="'Select a difficulty'" [List$]="difficulties$" [hint]="'Challenge yourself'">
+  <app-reusable-dropdown  [label]="'Select a difficulty'" (difficultyFormControl)="setDifFormControl($event)"
+   [List$]="difficulties$" [hint]="'Challenge yourself'">
   </app-reusable-dropdown>
 
 </div>
@@ -54,7 +55,7 @@ Quiz Maker
 <ng-container  *ngIf="questions$ | async">
   <h2>Good Luck!</h2> 
   <div class="questions">
-<app-quiz-template [question]="(questions$ | async)" ></app-quiz-template>
+<app-quiz-template [question]="(questions$ | async)" [params]="quizForm"></app-quiz-template>
   </div>
 </ng-container>
 </body>

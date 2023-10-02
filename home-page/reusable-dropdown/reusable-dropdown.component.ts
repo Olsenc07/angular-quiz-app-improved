@@ -56,48 +56,34 @@ export class ReusableDropdownComponent {
 typedFilter: FormControl<string | null> = new FormControl<string | null>('');
 // Input that is actulaly stored for later createQuiz()
 input: FormControl<CategoryDataInterface | null> = new FormControl<CategoryDataInterface | null>(this.default);
-uniqueCategories = new Set<string>(); 
-newList: any = []
-@Input() label!: string;
 // From parent
-  @Input()
-  List$!: Observable<CategoryDataInterface[]>;
-  // when tpying to filter then rsults dont show
-  // this.initialList$ is problem in 
-  // onFilterInput(){
-  // this.List$ = combineLatest([this.typedFilter.valueChanges.pipe(
-  //   debounceTime(500), distinctUntilChanged()),
-  //   this.initialList$]).pipe(
-  //     map(([typed, categories]) =>
-  //     categories.filter((category: CategoryDataInterface) =>
-  //     category.name.toLowerCase().indexOf(typed!.toLowerCase()) !== -1
-  //     )
-  //         ))
-  //   }
- 
-
+@Input() label: string | null = null;;
+@Input() hint: string | null = null;
+@Input()
+List$!: Observable<CategoryDataInterface[]>;
   // Define an initial list as a BehaviorSubject
-  initialList$ = new BehaviorSubject<CategoryDataInterface[]>([]);
+initialList$: BehaviorSubject<CategoryDataInterface[]> = new BehaviorSubject<CategoryDataInterface[]>([]);
 
 
 @Input() set selected(value: CategoryDataInterface){
   if (value) {
+    // add to category needed
     this.input.setValue(value);
   } else {
     this.input.setValue(this.default);
   }
 }
   // Child to Parent
-  @Output() selectedChange: EventEmitter<CategoryDataInterface> =
-   new EventEmitter<CategoryDataInterface>();
+  @Output() selectedChange: EventEmitter<CategoryDataInterface> = new EventEmitter<CategoryDataInterface>();
 
-constructor(private quizCategoriesDataService :QuizCategoriesDataService) {};
+constructor() {};
 
 ngOnInit(){
   this.List$.subscribe((categories: CategoryDataInterface[]) => {
     this.initialList$.next(categories);
   });
-// startWith('') allows list to be displayed before typing
+ // startWith('') allows list to be displayed before typing
+  // Filters list
   this.List$ = combineLatest([this.typedFilter.valueChanges.pipe(
     debounceTime(500), distinctUntilChanged(), startWith('')),
     this.initialList$]).pipe(
@@ -112,5 +98,6 @@ ngOnInit(){
 newSelection(entry: CategoryDataInterface) {
   this.input.setValue(entry);
   this.selectedChange.emit(entry);
+  console.log('fire');
 }
 }

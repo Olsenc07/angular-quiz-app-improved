@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../services/quiz-categories-data.service';
 import  { type CategoryDataInterface } from '../interfaces/category-interface';
-import {  Observable, Subject, Subscription, of, switchMap, takeUntil } from 'rxjs';
+import {  Observable, Subscription, of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,11 +49,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
   difficulties: CategoryDataInterface[] = [
     { id: 0, name: 'Easy' }, // uppercase is more aesthetically pleasing
     { id: 1, name: 'Medium' },
-    { id:2,  name: 'Hard' } 
+    { id: 2,  name: 'Hard' } 
   ];
 
   // Quiz
-  quizMade: boolean = false;
   questions$: Observable<QuizQuestionsInterface[]> = new Observable<QuizQuestionsInterface[]>;
   quizForm: FormGroup = new FormGroup({
     chosenCategory: new FormControl<string | null>('', [Validators.required]),
@@ -64,10 +63,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private quizCategoriesDataService: QuizCategoriesDataService,
     private createQuizService: CreateQuizService
   ) {}
-  ngOnDestroy(): void {
-    // if sub has been made
-    this.subCategorySub?.unsubscribe();
-  }
 
   ngOnInit(): void {
     // get catgeory data
@@ -75,7 +70,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.difficulties$ = of(this.difficulties);
   }
 
-  updateSelection(category: CategoryDataInterface) {
+  updateSelection(category: CategoryDataInterface): void {
     // get subCategory list
   this.subCategories$ = this.quizCategoriesDataService.getSubCategoryData(category.name);
   this.subCategorySub = this.subCategories$.subscribe({
@@ -83,11 +78,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
       if(data.length > 0){
         this.subCategoriesLoaded = true;
         if(this.quizForm.controls['chosenCategory'].value){
-        this.quizForm.controls['chosenCategory'].setValue(null)
+        this.quizForm.controls['chosenCategory'].reset(null)
         }
       }else{
         this.subCategoriesLoaded = false;
-        // assign category to formcontrol
+        // assign category to formcontrol value
         this.quizForm.controls['chosenCategory'].setValue(category.id)
       }
     },
@@ -97,12 +92,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
     }
   });
   }
-  // assign too formcontrols
-  setSubFormControl(formValue: CategoryDataInterface){
+  // assign subcategory to formcontrols
+  setSubFormControl(formValue: CategoryDataInterface): void {
     this.quizForm.controls['chosenCategory'].setValue(formValue.id);
   }
-  setDifFormControl(difficulyValue: CategoryDataInterface ){
-    // query requires lower case
+  setDifFormControl(difficulyValue: CategoryDataInterface): void {
+    // query requires lower case name
     this.quizForm.controls['chosenDifficulty'].setValue(difficulyValue.name.toLowerCase());
   }
   // create quiz
@@ -113,12 +108,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
       5
     );
   }
-
-  // efficent rendering
-  // trackByCats(i: number, category: CategoryDataInterface): string {
-  //   return category.name;
-  // }
-  // trackByDifficulty(i: number, difficulty: string): string {
-  //   return difficulty;
-  // }
+  ngOnDestroy(): void {
+    // if sub has been made
+    this.subCategorySub?.unsubscribe();
+  }
 }

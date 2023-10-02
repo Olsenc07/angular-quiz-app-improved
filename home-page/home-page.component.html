@@ -27,10 +27,9 @@ Quiz Maker
   </app-reusable-dropdown>
 </ng-container>
 <!-- Difficulty selection -->
-  <app-reusable-dropdown  [label]="'Select a difficulty'" (difficultyFormControl)="setDifFormControl($event)"
-   [List$]="difficulties$" [hint]="'Challenge yourself'">
+  <app-reusable-dropdown  [label]="'Select a difficulty'" [List$]="difficulties$"
+   (difficultyFormControl)="setDifFormControl($event)" [hint]="'Challenge yourself'">
   </app-reusable-dropdown>
-
 </div>
 
 <!-- create quiz button -->

@@ -9,10 +9,10 @@
     <div class="quiz-form-choice">
       <!-- filter by typing -->
       <mat-form-field appearance="outline">
-        <mat-label>{{label}}</mat-label>
+        <mat-label>{{ label }}</mat-label>
       <input matInput type="text" [formControl]="typedFilter" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" >
-        <ng-container *ngFor="let list  of (List$  | async ) as Lists">
+        <ng-container *ngFor="let list  of (List$  | async ) as Lists; index as i; trackBy: trackByList">
           <mat-option (click)="newSelection(list)" *ngIf="(list.name | hideBeforeColon) as subCat" 
           [value]="subCat">
               <span 
@@ -21,7 +21,9 @@
           </mat-option>
         </ng-container>
       </mat-autocomplete>
-    <mat-hint>{{hint}}</mat-hint>
-    </mat-form-field>
-          </div>
+        <ng-container *ngIf="hint === 'string' ">
+          <mat-hint>{{ hint }}</mat-hint>
+        </ng-container>
+      </mat-form-field>
+    </div>
 </body>

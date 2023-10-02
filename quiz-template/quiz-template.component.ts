@@ -39,9 +39,8 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class QuizTemplateComponent implements OnChanges, OnDestroy {
-  valid: boolean = false;
   // create forms
-  answersForm = this.fb.group({});
+  answersForm: FormGroup<{}> = this.fb.group({});
   // Only used once
   newQuestionSub?: Subscription;
 
@@ -62,7 +61,6 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
   @Input({ required: true })
   params: FormGroup | undefined;
   ngOnChanges(): void {
-    console.log('params', this.params)
     // create new array after making objects of answers
     // to indicate correct or incorrect answers
     // assign which question these answers were in
@@ -71,7 +69,7 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
       }
     }
   
-  addAnswer(q: QuizQuestionsInterface[], originalQ: boolean, swapIndex?: number) {
+  addAnswer(q: QuizQuestionsInterface[], originalQ: boolean, swapIndex?: number): void {
   for (let i = 0; i < q.length; i++) {
     this.answerList.push({
       id: i,
@@ -95,6 +93,8 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
     );
     }else{
       // swap answer
+      console.log('new q', q);
+      console.log('new list',  this.answerList);
       this.randomizeQuestions(q![i].question, swapIndex)
     }
   }
@@ -117,6 +117,7 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
         title,
         questions: randomizedAnswerList,
       }
+      console.log('boogers',  this.completeList);
     }else{
       // creating original list
     this.completeList.push({
@@ -127,7 +128,7 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
   }
 
 // One use per quiz
-swapQuestion(index: number){
+swapQuestion(index: number): void{
   // needs to make a request for one question
   this.newQuestionSub = this.createQuizService.createQuiz(
     this.params!.controls['chosenCategory'].value, 
@@ -136,23 +137,25 @@ swapQuestion(index: number){
   ).subscribe((replacementQuestion: QuizQuestionsInterface[]) => {
     // need to add chosen and answer to object
     this.addAnswer(replacementQuestion, false, index)
-  })
-}
+    // clear the form control associated with old question
+    this.answersForm.get(index.toString())?.reset('');
+  });
+};
 
   // efficient array rending
   trackByList(index: number, list: CompleteQuestion): CompleteQuestion {
     return list;
-  }
-
+  };
   trackByQuestions(
     index: number,
     questions: QuestionsRandomizedInterface
   ): QuestionsRandomizedInterface {
     return questions;
-  }
+  };
 
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
+    console.log('answered new', appropriateForm);
     // unclick answer
     if (
       answer.id == this.answersForm.get(appropriateForm)?.value.id &&
@@ -167,8 +170,9 @@ swapQuestion(index: number){
         question: answer.question,
         answer: answer.answer,
       });
-    }
-  }
+    };
+    console.log('answered', this.answersForm);
+  };
 
   submitQuiz(Choices: FormGroup, List: CompleteQuestion[]): void {
     const values: QuestionsRandomizedInterface[] = [];
@@ -190,7 +194,7 @@ swapQuestion(index: number){
           }
         );
       });
-    }
+    };
     // navigate to answer page
     this.router.navigate(['/answers/:'], {
       // passing objects as strings through url
@@ -198,7 +202,7 @@ swapQuestion(index: number){
         questions: JSON.stringify(List),
       },
     });
-  }
+  };
   //clean up
   ngOnDestroy(): void {
     // if Subscription has been made

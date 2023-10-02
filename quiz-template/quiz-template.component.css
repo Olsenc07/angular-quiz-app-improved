@@ -4,8 +4,9 @@
   .card{
     margin: 2% 0%;
   }
-  .change{
-    color: blue;
+  mat-chip{
+    background-color: #7bc4ec !important;
+    font-style: italic;
   }
   .submit{
     display: flex;

@@ -11,14 +11,13 @@ import { QuizQuestionsInitialInterface } from '../interfaces/quiz-questions-init
 })
 export class CreateQuizService {
    // Cache to store initial questions
-   private initialQuestions: QuizQuestionsInterface[] = [];
+  private initialQuestions: QuizQuestionsInterface[] = [];
    // Subject for unsubscribing
   private unsubscribe$: Subject<void> = new Subject<void>();
   // Direct Injection
   constructor(private http: HttpClient) {}
   // create quiz from api
   createQuiz(
-    // category is id
     category: string,
     difficulty: string,
     numberOfQuestions: number
@@ -40,33 +39,27 @@ export class CreateQuizService {
         if(numberOfQuestions > 1){
           // store these values
           this.initialQuestions = data.results;
-          // of creates an observable
+          // of creates an observable that emits data.results in array form
          return of(data.results)
         }else{
-        // only return if it's one of the same questions or make call again
+        // only return if it's a new question or make call again
          const newQuestion: QuizQuestionsInterface = data.results[0];
         if(this.initialQuestions.some((q: QuizQuestionsInterface) => 
         q.question === newQuestion.question)){
-          // redue request
+          // request a new question
         return this.createQuiz(category, difficulty, 1);
         }else{
             // Add the new question to the cache and return it
             this.initialQuestions.push(newQuestion);
-          // of creates an observable
+            // of creates an observable that emits data.results in array form
+            // this is the new replaced question
             return of(data.results);
-        }
+            }
         }
       }),
       catchError((err) => {
         throw 'error in quiz creation' + err;
-      }),
-      // Unsubscribe when needed
-      takeUntil(this.unsubscribe$) 
+      })
     );
   }
-  // Clean Up, unsubscribe when it's no longer needed
-unsubscribe(): void {
-  this.unsubscribe$.next();
-  this.unsubscribe$.complete();
-}
 }

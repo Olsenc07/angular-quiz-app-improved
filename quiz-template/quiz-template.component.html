@@ -28,9 +28,9 @@
       {{questions.question | decode}}
     </mat-chip-option>
       </mat-chip-listbox>
-  <!-- Allowed one change of question -->
+  <!-- Allowed one change of question, hide when subscription has been made -->
   <ng-container *ngIf="!newQuestionSub">
-    <mat-chip class="card change" (click)="swapQuestion(i)" color="primary" selected  matTooltip="You can switch one question per quiz">
+    <mat-chip class="card" (click)="swapQuestion(i)" matTooltip="You can switch one question per quiz">
     Change Question
     </mat-chip>
   </ng-container>

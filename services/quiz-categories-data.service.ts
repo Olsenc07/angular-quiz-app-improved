@@ -54,15 +54,12 @@ export class QuizCategoriesDataService {
       // only push if this category hasnt't already been added
       const categoryPart = cat.name.split(':')[0];
       if (!noRepeats.some(item => item.name === categoryPart)) {
-        console.log('no repeats', noRepeats);
         noRepeats.push({
           id: cat.id,
           name: categoryPart
         });
       }
     }else{
-      console.log(':', noRepeats);
-
       // If not a subCategory, just add to list
       noRepeats.push({
         id: cat.id, name: cat.name

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { QuizCategoriesDataService } from '../../services/quiz-categories-data.service';
 import  { type CategoryDataInterface } from '../../interfaces/category-interface';
-import { Observable, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, map, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,7 +60,31 @@ uniqueCategories = new Set<string>();
 newList: any = []
 @Input() label!: string;
 // From parent
-@Input() List$: Observable<CategoryDataInterface[]>;
+  @Input()
+  List$!: Observable<CategoryDataInterface[]>;
+  // when tpying to filter then rsults dont show
+  // this.initialList$ is problem in 
+  // onFilterInput(){
+  // this.List$ = combineLatest([this.typedFilter.valueChanges.pipe(
+  //   debounceTime(500), distinctUntilChanged()),
+  //   this.initialList$]).pipe(
+  //     map(([typed, categories]) =>
+  //     categories.filter((category: CategoryDataInterface) =>
+  //     category.name.toLowerCase().indexOf(typed!.toLowerCase()) !== -1
+  //     )
+  //         ))
+  //   }
+  set ListSource(value: Observable<CategoryDataInterface[]>) {
+    if (value) {
+      value.subscribe(categories => {
+        console.log('1', categories);
+        this.initialList$.next(categories);
+      });
+    }
+  }
+
+  // Define an initial list as a BehaviorSubject
+  initialList$ = new BehaviorSubject<CategoryDataInterface[]>([]);
 
 
 @Input() set selected(value: CategoryDataInterface){
@@ -74,22 +98,17 @@ newList: any = []
   @Output() selectedChange: EventEmitter<CategoryDataInterface> =
    new EventEmitter<CategoryDataInterface>();
 
-constructor(private quizCategoriesDataService :QuizCategoriesDataService) { 
-  this.List$ = this.typedFilter.valueChanges.pipe(
-    debounceTime(500), distinctUntilChanged(),
-    startWith(''),
-    switchMap((typed) => {
-      return this.quizCategoriesDataService.getCategoryData().pipe(
-      map((categories) =>
+constructor(private quizCategoriesDataService :QuizCategoriesDataService) {};
+
+onFilterInput(){
+  this.List$ = combineLatest([this.typedFilter.valueChanges.pipe(
+    debounceTime(500), distinctUntilChanged()),
+    this.initialList$]).pipe(
+      map(([typed, categories]) =>
       categories.filter((category: CategoryDataInterface) =>
       category.name.toLowerCase().indexOf(typed!.toLowerCase()) !== -1
       )
-    ))
-}))
-     
-     this.List$.subscribe((x) => {
-      console.group('x',x)
-     })
+          ))
     }
 
 newSelection(entry: CategoryDataInterface) {

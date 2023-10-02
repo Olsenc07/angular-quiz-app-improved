@@ -128,16 +128,14 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
 
 // One use per quiz
 swapQuestion(index: number){
- const swapIndex = index
-  // needs to make a request for one
+  // needs to make a request for one question
   this.newQuestionSub = this.createQuizService.createQuiz(
     this.params!.controls['chosenCategory'].value, 
       this.params!.controls['chosenDifficulty'].value,
     1
   ).subscribe((replacementQuestion: QuizQuestionsInterface[]) => {
-    // need to add chosne stuff first
-    this.addAnswer(replacementQuestion, false, swapIndex)
-    // this.randomizeQuestions(replacementQuestion[0].question, swapIndex);
+    // need to add chosen and answer to object
+    this.addAnswer(replacementQuestion, false, index)
   })
 }
 
@@ -203,7 +201,7 @@ swapQuestion(index: number){
   }
   //clean up
   ngOnDestroy(): void {
-    // if sub has been made
+    // if Subscription has been made
     this.newQuestionSub?.unsubscribe();
   }
 }

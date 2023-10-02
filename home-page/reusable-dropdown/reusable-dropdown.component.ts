@@ -74,14 +74,7 @@ newList: any = []
   //     )
   //         ))
   //   }
-  set ListSource(value: Observable<CategoryDataInterface[]>) {
-    if (value) {
-      value.subscribe(categories => {
-        console.log('1', categories);
-        this.initialList$.next(categories);
-      });
-    }
-  }
+ 
 
   // Define an initial list as a BehaviorSubject
   initialList$ = new BehaviorSubject<CategoryDataInterface[]>([]);
@@ -100,16 +93,21 @@ newList: any = []
 
 constructor(private quizCategoriesDataService :QuizCategoriesDataService) {};
 
-onFilterInput(){
+ngOnInit(){
+  this.List$.subscribe((categories: CategoryDataInterface[]) => {
+    this.initialList$.next(categories);
+  });
+// startWith('') allows list to be displayed before typing
   this.List$ = combineLatest([this.typedFilter.valueChanges.pipe(
-    debounceTime(500), distinctUntilChanged()),
+    debounceTime(500), distinctUntilChanged(), startWith('')),
     this.initialList$]).pipe(
       map(([typed, categories]) =>
       categories.filter((category: CategoryDataInterface) =>
       category.name.toLowerCase().indexOf(typed!.toLowerCase()) !== -1
       )
           ))
-    }
+}
+
 
 newSelection(entry: CategoryDataInterface) {
   this.input.setValue(entry);

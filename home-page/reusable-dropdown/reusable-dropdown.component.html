@@ -10,8 +10,7 @@
       <!-- filter by typing -->
       <mat-form-field appearance="outline">
         <mat-label>{{label}}</mat-label>
-      <input matInput type="text" [formControl]="typedFilter" [matAutocomplete]="auto"
-      (keyup)="onFilterInput()">
+      <input matInput type="text" [formControl]="typedFilter" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
         <ng-container *ngFor="let list  of (List$  | async ) as Lists">
           <mat-option *ngIf="(list.name | hideBeforeColon)" [value]="list">

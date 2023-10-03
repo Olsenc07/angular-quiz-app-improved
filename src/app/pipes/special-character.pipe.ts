@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'decode',
   standalone: true,
+  name: 'decode'
 })
 export class SpecialCharacterPipe implements PipeTransform {
   transform(value: string): string {

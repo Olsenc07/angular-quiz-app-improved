@@ -5,17 +5,9 @@
   <title>Quiz Template</title>
 </head>
 <body >
-<form [formGroup]="answersForm"  (ngSubmit)="submitQuiz(answersForm, completeList)" >
-  <!-- submit -->
-  <ng-container *ngIf="answersForm.valid">
-    <div class="submit">
-      <button mat-raised-button color="primary" id="submit" type="submit" >
-        Submit
-      </button>
-    </div>
-  </ng-container>
+<form [formGroup]="answersForm">
     <ol>
-        <li *ngFor="let list of completeList; index as i; trackBy: trackByList;"> 
+        <li *ngFor="let list of (completeList$ | async) as completeList; last as isLast; index as i; trackBy: trackByList;"> 
   <mat-card class="card">
     <mat-card-header>
       {{list.title | decode}}
@@ -36,6 +28,14 @@
   </ng-container>
     </mat-card-content>
   </mat-card>
+    <!-- submit -->
+    <ng-container *ngIf="answersForm.valid && isLast">
+      <div class="submit">
+        <button mat-raised-button color="primary" id="submit" type="submit" (click)="submitQuiz(answersForm, completeList)" >
+          Submit
+        </button>
+      </div>
+    </ng-container>
   </li> 
   </ol>
   </form>

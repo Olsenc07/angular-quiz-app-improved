@@ -21,11 +21,11 @@
       </mat-card-header>
       <mat-card-content>
         <mat-chip-listbox >
-      <mat-basic-chip *ngFor="let question of list.questions; trackBy: trackByList;"
+      <mat-chip *ngFor="let question of list.questions; trackBy: trackByList;"
       class="btn"
       [ngClass]="{'failed-btn': ((question.chosen === true) && (question.answer === false)), 'pass-btn': question.answer === true }">
         {{question.question | decode}}
-      </mat-basic-chip>
+      </mat-chip>
         </mat-chip-listbox>
       </mat-card-content>
     </mat-card>

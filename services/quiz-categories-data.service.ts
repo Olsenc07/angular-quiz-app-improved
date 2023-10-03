@@ -30,8 +30,7 @@ export class QuizCategoriesDataService {
     }
     return this.categories$;
   }
-
-
+// filter out sub categories
   getSubCategoryData(category: string): Observable<CategoryDataInterface[]> {
     const filteredSubCategory = of(this.subList).pipe(
       map(options => options!.filter((item) => {
@@ -58,14 +57,14 @@ export class QuizCategoriesDataService {
           id: cat.id,
           name: categoryPart
         });
-      }
+      };
     }else{
       // If not a subCategory, just add to list
       noRepeats.push({
         id: cat.id, name: cat.name
       })
-    }
-  }
+    };
+  };
   return noRepeats
   }
 }

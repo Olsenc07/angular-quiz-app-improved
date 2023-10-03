@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CompleteQuestion } from '../interfaces/complete-question-interface';
 import { CreateQuizService } from '../services/create-quiz.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-quiz-template',
@@ -51,8 +51,10 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
   ) {}
   
   // Define arrays
-  answerList: QuestionsRandomizedInterface[] = [];
-  completeList: CompleteQuestion[] = [];
+  private answerList: QuestionsRandomizedInterface[] = [];
+  private singleAnswerList: QuestionsRandomizedInterface[] = [];
+  private completeListSubject: BehaviorSubject<CompleteQuestion[]> = new BehaviorSubject<CompleteQuestion[]>([]);
+  completeList$: Observable<CompleteQuestion[]>  = this.completeListSubject.asObservable();
 
   // Recieve data from parent
   @Input({ required: true })
@@ -65,11 +67,11 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
     // to indicate correct or incorrect answers
     // assign which question these answers were in
     if (this.question?.length) {
-     this.addAnswer(this.question, true);
+     this.addAnswer(this.question);
       }
-    }
+    };
   
-  addAnswer(q: QuizQuestionsInterface[], originalQ: boolean, swapIndex?: number): void {
+  addAnswer(q: QuizQuestionsInterface[]): void {
   for (let i = 0; i < q.length; i++) {
     this.answerList.push({
       id: i,
@@ -83,24 +85,14 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
         answer: false,
       });
     }
-    if(originalQ){
-    // add only for first input, not when question is swapped
     this.randomizeQuestions(q![i].question);
     const name: string = i.toString();
     this.answersForm.addControl(
       name,
-      this.fb.control<string>('', [Validators.required])
-    );
-    }else{
-      // swap answer
-      console.log('new q', q);
-      console.log('new list',  this.answerList);
-      this.randomizeQuestions(q![i].question, swapIndex)
-    }
-  }
-}
+      this.fb.control<string>('', [Validators.required]))
+  }};
   // Randomize questions
-  private randomizeQuestions(title: string, swapIndex?: number): void {
+  private randomizeQuestions(title: string): void {
     const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
     const length: number = this.answerList.length;
     for (let i = 0; i < length; i++) {
@@ -111,22 +103,35 @@ export class QuizTemplateComponent implements OnChanges, OnDestroy {
         this.answerList.splice(randomize, 1);
       randomizedAnswerList.push(selectedQuestion[0]);
     }
-    if(typeof swapIndex === 'number'){
-      // replace old question
-      this.completeList[swapIndex] = {
+
+      // creating original list
+      const newCompleteList: CompleteQuestion[] = this.completeListSubject.getValue().slice();
+      newCompleteList.push({
         title,
         questions: randomizedAnswerList,
-      }
-      console.log('boogers',  this.completeList);
-    }else{
-      // creating original list
-    this.completeList.push({
-      title,
-      questions: randomizedAnswerList,
-    });
-    };
+      });
+      this.completeListSubject.next(newCompleteList); // update list
   }
-
+// Randomize replaced question
+  private randomizeSingleQuestion(title: string, swapIndex: number): void{
+    const randomizedAnswerList: QuestionsRandomizedInterface[] = [];
+    const length: number = this.singleAnswerList.length;
+    for (let i = 0; i < length; i++) {
+      const randomize: number = Math.floor(
+        Math.random() * this.singleAnswerList.length
+      );
+      const selectedQuestion: QuestionsRandomizedInterface[] =
+        this.singleAnswerList.splice(randomize, 1);
+      randomizedAnswerList.push(selectedQuestion[0]);
+    }
+      // replace old question
+      const updatedList: CompleteQuestion[] = this.completeListSubject.getValue().slice(); // Get the current value
+      updatedList[swapIndex] = {
+        title,
+        questions: randomizedAnswerList,
+      }; // swap at appropriate index
+      this.completeListSubject.next(updatedList); // update list
+  }
 // One use per quiz
 swapQuestion(index: number): void{
   // needs to make a request for one question
@@ -136,7 +141,19 @@ swapQuestion(index: number): void{
     1
   ).subscribe((replacementQuestion: QuizQuestionsInterface[]) => {
     // need to add chosen and answer to object
-    this.addAnswer(replacementQuestion, false, index)
+       // swap answer set up
+       this.singleAnswerList.push({
+         id: index,
+         question: replacementQuestion![0].correct_answer,
+         answer: true,
+       })
+       for (const c of replacementQuestion![0].incorrect_answers) {
+       this.singleAnswerList.push({
+         id: index,
+         question: c,
+         answer: false,
+       })};
+       this.randomizeSingleQuestion(replacementQuestion![0].question, index);
     // clear the form control associated with old question
     this.answersForm.get(index.toString())?.reset('');
   });
@@ -155,7 +172,6 @@ swapQuestion(index: number): void{
 
   answered(answer: QuestionsRandomizedInterface): void {
     const appropriateForm: string = answer.id.toString();
-    console.log('answered new', appropriateForm);
     // unclick answer
     if (
       answer.id == this.answersForm.get(appropriateForm)?.value.id &&
@@ -171,7 +187,6 @@ swapQuestion(index: number): void{
         answer: answer.answer,
       });
     };
-    console.log('answered', this.answersForm);
   };
 
   submitQuiz(Choices: FormGroup, List: CompleteQuestion[]): void {

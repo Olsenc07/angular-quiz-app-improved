@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormControl,
   ReactiveFormsModule,
@@ -38,7 +38,7 @@ import { BoldPipe } from '../../pipes/bold.pipe';
     BoldPipe
   ]
 })
-export class ReusableDropdownComponent {
+export class ReusableDropdownComponent implements OnInit, OnDestroy {
 // simply used to display drop down filtered options
 typedFilter: FormControl<string | null> = new FormControl<string | null>('');
 // From parent
